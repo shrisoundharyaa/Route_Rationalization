@@ -26,35 +26,42 @@
   }
   
   .sidenav {
-    height: 100vh;
+    height: 670px;
+    border-radius: 10px;
     width: 250px;
-    background-color: white;
+    background-color: rgb(233, 233, 233);
     color: rgb(63, 63, 63);
     padding-top: 20px;
     position: fixed;
-    top: 0;
-    left: 0;
-    font-style: 'Poppins';
+    display: flex;
+    flex-direction: column;
+    top:20px;
+    left:20px;
+    box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
+    transition: width 0.3s ease; 
+    
   }
   
   .sidenav ul {
     list-style-type: none;
     padding: 0;
   }
+  .sidenav ul li:hover{
+    background-color: #acacac;
+    border-radius: 10px;
+  }
   
   .sidenav li {
+    font-weight: 600;
+    font-size: 17px;
     padding: 15px;
-    text-align: center;
-    border-bottom: 1px solid #444;
+ 
   }
   
-  .sidenav li:hover {
-    background-color: #575757;
-    cursor: pointer;
-  }
+ 
   
   .content {
-    margin-left: 250px;
+    /* margin-left: 250px; */
     padding: 20px;
     flex-grow: 1;
   }

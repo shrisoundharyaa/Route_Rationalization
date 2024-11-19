@@ -1,0 +1,2 @@
+npm install leaflet
+npm install vue3-leaflet
