@@ -1,9 +1,8 @@
 <template>
     <div class="main">
 
-        
+        <Sidebar class="navbar"/>
         <div class="map" id="map"></div>
-        
     </div>
 </template>
 <script>
@@ -18,7 +17,10 @@ export default{
     },
     
     mounted(){
-        const map = L.map('map').setView([28.6139, 77.209], 13);
+        const map = L.map('map',{zoomControl: false,}).setView([28.6139, 77.209], 13);
+        L.control.zoom({
+            position: 'topright', 
+        }).addTo(map);
         L.tileLayer(
         'https://{s}-tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=pk.9f88024f3c74bfd657fb88d60557dc6d',
         {
@@ -31,12 +33,16 @@ export default{
 };
 </script>
 <style scoped>
+
+
 .map {
   position: absolute; 
+  top: 0;
   left: 0;
   height: 100vh; 
   width: 100vw; 
-  margin: 0; 
-  padding: 0; 
 }
+
+
 </style>
+

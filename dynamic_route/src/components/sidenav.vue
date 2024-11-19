@@ -2,9 +2,10 @@
     <div class="main">
       <nav class="sidenav">
         <ul>
-          <li>Real Time Monitoring</li>
-          <li>Route Optimization</li>
-          <li>Traffic Insights</li>
+          <li>Map</li>
+          <li>Buses</li>
+          <li>Routs</li>
+          <li>Analytics</li>
         </ul>
       </nav>
       <div class="content">
@@ -21,22 +22,21 @@
   </script>
   
   <style scoped>
-  .main {
-    display: flex;
-  }
+  
   
   .sidenav {
     height: 670px;
     border-radius: 10px;
-    width: 250px;
-    background-color: rgb(233, 233, 233);
-    color: rgb(63, 63, 63);
+    width: 300px;
+    background-color: rgb(44, 44, 44);
+    color: rgb(255, 255, 255);
     padding-top: 20px;
     position: fixed;
     display: flex;
     flex-direction: column;
     top:20px;
     left:20px;
+    z-index: 1000; 
     box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
     transition: width 0.3s ease; 
     
