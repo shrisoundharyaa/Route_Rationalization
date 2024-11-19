@@ -2,7 +2,7 @@
     <div class="main">
       <nav class="sidenav">
         <div class="back-arrow" @click="$router.push('/')">
-          <p>kskmd</p>
+          <i class="fa fa-arrow-left"></i>
         </div>
   
         <ul>
@@ -14,11 +14,11 @@
         <div v-if="selectedSection === 'identifyBus'">
           <h2>Identify Bus</h2>
           <form @submit.prevent="submitBusId">
-            <label for="busId">Enter Bus ID:</label>
+            <label for="busId">Enter Bus ID :  </label>
             <input type="text" id="busId" v-model="busId" required />
             <button type="submit">Submit</button>
           </form>
-          <p v-if="submittedBusId">You entered Bus ID: {{ submittedBusId }}</p>
+          <p v-if="submittedBusId">You entered Bus ID : {{ submittedBusId }}</p>
         </div>
         
         <div v-if="selectedSection === 'busBunching'">
@@ -28,6 +28,7 @@
       </div>
     </div>
   </template>
+  
   
 <script>
 export default {
@@ -55,12 +56,14 @@ export default {
 <style scoped>
 .main {
   display: flex;
+  height: 100vh; 
+  background-color: rgb(39, 39, 39);
 }
 
 .sidenav {
   height: 100vh;
   width: 250px;
-  background-color: rgb(44, 44, 44);
+  background-color: black;
   color: white;
   padding-top: 20px;
   position: fixed;
@@ -72,11 +75,12 @@ export default {
   box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
   transition: width 0.3s ease;
 }
+
 .back-arrow {
   font-size: 24px;
   color: white;
   cursor: pointer;
-  margin-bottom: 20px; /* Space below the icon */
+  margin-bottom: 20px;
   padding-left: 10px;
 }
 
@@ -98,10 +102,14 @@ export default {
 }
 
 .content {
-  margin-left: 270px; /* Space for sidebar */
+  margin-left: 270px;
   padding: 20px;
-  color: black;
-  flex-grow: 1;
+  width: 1266px; 
+  background-color: rgb(39, 39, 39); /* Content background matches the page */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align content to the top */
 }
 
 form {
@@ -126,4 +134,3 @@ button:hover {
   background-color: #45a049;
 }
 </style>
-  
