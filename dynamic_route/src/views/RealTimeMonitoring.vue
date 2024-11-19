@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <Sidebar />
+
         
         <div class="map" id="map"></div>
         
@@ -31,18 +31,12 @@ export default{
 };
 </script>
 <style scoped>
-.main {
-    display: flex;
-    flex-direction: column;
-    top:0;
-     margin-left: 150px;
-}
-
-
 .map {
-    top:-100px;
-    flex-grow: 1;
-    height: 500px;
-    width: 1180px; 
+  position: absolute; 
+  left: 0;
+  height: 100vh; 
+  width: 100vw; 
+  margin: 0; 
+  padding: 0; 
 }
 </style>
