@@ -44,7 +44,7 @@ def get_vehicle_positions():
                 positions.append(position_data)
 
     # Return the filtered data as JSON
-    return jsonify(positions)
+    return jsonify(positions) 
 
 if __name__ == '__main__':
     app.run(debug=True)
