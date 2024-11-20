@@ -32,7 +32,7 @@
         <li @click="$router.push('/buses')">
           <i class="fas fa-bus"></i> Buses
         </li>
-        <li>
+        <li @click="$router.push('/routes')">
           <i class="fas fa-route"></i> Routes
         </li>
         <li>
