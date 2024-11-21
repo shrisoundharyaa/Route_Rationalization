@@ -190,6 +190,7 @@
   font-size: 24px;
   color: white;
   cursor: pointer;
+
   top:0;
   left:0;
 }
