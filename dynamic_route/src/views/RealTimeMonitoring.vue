@@ -66,23 +66,9 @@ export default {
 
       this.addBusMarkers(this.busMarkers);
     },
-    loadKML() {
+   
   
-    const kmlLayer = new google.maps.KmlLayer({
-    url: '/Route_Rationalization/dynamic_route/public/delhi-bus-routes.kml', // The KML file must be in the public folder
-    map: this.map, // Attach it to the map
-  });
-  google.maps.event.addListener(kmlLayer, 'status_changed', function() {
-    const status = kmlLayer.getStatus();
-    console.log(status);
-    if (status === google.maps.KmlLayerStatus.OK) {
-      console.log('KML layer loaded successfully');
-    } else {
-      console.error('Error loading KML file');
-    }
-  });
-       
-    },
+   
 
     addBusMarkers(locations) {
       locations.forEach(location => {
