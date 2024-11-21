@@ -6,8 +6,12 @@
       </div>
 
       <ul>
-        <li @click="selectSection('identifyBus')">Identify Bus</li>
-        <li @click="selectSection('busBunching')">Bus Bunching</li>
+        <li @click="selectSection('identifyBus')">
+          <i class="fa fa-bus" aria-hidden="true"></i> Identify Bus
+        </li>
+        <li @click="selectSection('busBunching')">
+          <i class="fa fa-exchange" aria-hidden="true"></i> Bus Bunching
+        </li>
       </ul>
     </nav>
     <div class="content">
@@ -15,10 +19,28 @@
         <h2>Identify Bus</h2>
         <form @submit.prevent="submitBusId">
           <label for="busId">Enter Bus ID : </label>
-          <input type="text" id="busId" v-model="busId" required />
-          <button type="submit">Submit</button>
+          <input type="text" id="busId" v-model="busId" required class="styled-input" />
+          <button type="submit" class="styled-button">Submit</button>
         </form>
-        <p v-if="vehicleLocation">Vehicle Location: {{ vehicleLocation }}</p>
+        <!-- Display the data in a table -->
+        <table v-if="vehicleData.length > 0" class="data-table">
+          <thead>
+            <tr>
+              <th>Bus ID</th>
+              <th>Trip ID</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="vehicle in vehicleData" :key="vehicle.vehicle_id">
+              <td>{{ vehicle.vehicle_id }}</td>
+              <td>{{ vehicle.trip_id }}</td>
+              <td>{{ vehicle.latitude }}</td>
+              <td>{{ vehicle.longitude }}</td>
+            </tr>
+          </tbody>
+        </table>
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
 
@@ -37,7 +59,7 @@ export default {
     return {
       selectedSection: 'identifyBus',
       busId: '',
-      vehicleLocation: null,
+      vehicleData: [], // Array to hold the vehicle data
       errorMessage: null, // To store error messages
     };
   },
@@ -54,21 +76,19 @@ export default {
 
         if (response.ok) {
           if (data.length > 0) {
-            // Assume the first matching bus is the desired result
-            const vehicle = data[0];
-            this.vehicleLocation = `Bus ID: ${vehicle.vehicle_id}, Trip ID: ${vehicle.trip_id}, Latitude: ${vehicle.latitude}, Longitude: ${vehicle.longitude}`;
+            this.vehicleData = data; // Populate the table with data
             this.errorMessage = null; // Clear any error messages
           } else {
-            this.vehicleLocation = null;
+            this.vehicleData = [];
             this.errorMessage = 'No matching bus found.';
           }
         } else {
-          this.vehicleLocation = null;
+          this.vehicleData = [];
           this.errorMessage = data.error || 'Error fetching vehicle data.';
         }
       } catch (error) {
         console.error('Error fetching vehicle location:', error);
-        this.vehicleLocation = null;
+        this.vehicleData = [];
         this.errorMessage = 'Unable to connect to the server.';
       }
     },
@@ -76,11 +96,10 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .main {
   display: flex;
-  height: 100vh; 
+  height: 100vh;
   background-color: rgb(39, 39, 39);
 }
 
@@ -125,36 +144,69 @@ export default {
   border-radius: 10px;
 }
 
-.content {
-  margin-left: 270px;
-  padding: 20px;
-  width: 1266px; 
-  background-color: rgb(39, 39, 39); /* Content background matches the page */
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Align content to the top */
-}
-
-form {
-  margin-top: 10px;
-}
-
-input[type="text"] {
-  padding: 8px;
-  font-size: 14px;
+.sidenav li i {
   margin-right: 10px;
 }
 
-button {
-  padding: 8px 15px;
-  background-color: #4CAF50;
+.content {
+  margin-left: 270px;
+  padding: 20px;
+  width: 1266px;
+  background-color: rgb(39, 39, 39);
   color: white;
-  border: none;
-  cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
+table.data-table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.data-table th,
+table.data-table td {
+  border: 1px solid white;
+  text-align: left;
+  padding: 8px;
+}
+
+table.data-table th {
+  background-color: #333;
+  color: white;
+}
+
+.styled-input {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid white;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 250px;
+  transition: all 0.3s ease;
+}
+
+.styled-input:focus {
+  outline: none;
+  border-color: #00bcd4;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.styled-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #df751f;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* .styled-button:hover {
+  background-color: #891192;
+} */
+
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>

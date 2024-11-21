@@ -1,284 +1,306 @@
 <template>
-    <div class="main">
-        <div class="back-arrow" @click="$router.push('/')">
-          <i class="fa fa-arrow-left"></i>
+  <div class="ui-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Input Section -->
+      <div class="input-section">
+        <div class="input-group">
+          <input type="text" id="start" v-model="start" placeholder="Enter Starting Location" />
+          <input type="text" id="end" v-model="end" placeholder="Enter Destination" />
+          <button class="primary-btn" @click="calculateRoutes">Calculate Routes</button>
         </div>
-      <h1>Dynamic-Route-Rationalization-Model</h1>
-      <div class="input-container">
-        <input
-          type="text"
-          v-model="source"
-          placeholder="Enter starting location"
-        />
-        <input
-          type="text"
-          v-model="destination"
-          placeholder="Enter destination"
-        />
-        <button @click="calculateRoutes">Calculate Routes</button>
       </div>
-      <div class="map" id="map"></div>
-      <div id="controls">
-        <button @click="resetMap">Reset Map</button>
-        <select v-model="mapType" @change="changeMapType">
-          <option value="roadmap">Roadmap</option>
-          <option value="satellite">Satellite</option>
-          <option value="hybrid">Hybrid</option>
-          <option value="terrain">Terrain</option>
-        </select>
+
+      <!-- Controls Section -->
+      <div class="controls-section">
+        <button class="control-btn" @click="resetMap">Reset Map</button>
+       
       </div>
-      <div id="routeList"></div>
+
+      <!-- Route List Section -->
+      <div class="routes-section">
+        <h2>Available Routes</h2>
+        <div id="routeList" class="route-list"></div>
+      </div>
     </div>
-    
-  </template>
-  
-  <script>
-  import L from "leaflet";
-  import "leaflet/dist/leaflet.css";
-  import axios from "axios";
-  
-  export default {
-    name: "RouteManagement",
-    data() {
-      return {
-        map: null,
-        source: "",
-        destination: "",
-        mapType: "roadmap",
-        markers: [],
-        routeLayer: null,
-      };
+
+    <!-- Map Section -->
+    <div class="map-container">
+      <div id="map" ref="map"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      start: '',
+      end: '',
+      map: null,
+      directionsService: null,
+      directionsRenderer: null,
+      trafficLayer: null,
+      autocompleteStart: null,
+      autocompleteEnd: null,
+      markers: [],
+      polylines: [],
+      busMarkers: [],
+      geocoder: null,
+      mapType: 'roadmap',
+    };
+  },
+  mounted() {
+    // Initialize Google Maps
+    this.initMap();
+  },
+  methods: {
+    initMap() {
+      this.map = new google.maps.Map(this.$refs.map, {
+        center: { lat: 28.6139, lng: 77.209 },
+        zoom: 12,
+        styles: [
+          { elementType: 'geometry', stylers: [{ color: '#f5f5f5' }] },
+          { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+          { elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
+          { elementType: 'labels.text.stroke', stylers: [{ color: '#f5f5f5' }] },
+          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ffffff' }] },
+          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#e3f2fd' }] },
+        ]
+      });
+
+      this.directionsService = new google.maps.DirectionsService();
+      this.directionsRenderer = new google.maps.DirectionsRenderer();
+      this.directionsRenderer.setMap(this.map);
+
+      this.trafficLayer = new google.maps.TrafficLayer();
+
+      this.autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('start'));
+      this.autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('end'));
+
+      this.geocoder = new google.maps.Geocoder();
+
+      this.addBusMarkers(this.busMarkers);
     },
-    methods: {
-      initMap() {
-        // Initialize the map
-        this.map = L.map("map", { zoomControl: false }).setView(
-          [28.6139, 77.209],
-          13
-        );
-  
-        // Add zoom control
-        L.control
-          .zoom({
-            position: "topright",
-          })
-          .addTo(this.map);
-  
-        // Add tile layer
-        L.tileLayer(
-          "https://{s}-tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=pk.9f88024f3c74bfd657fb88d60557dc6d",
-          {
-            attribution: "© LocationIQ contributors",
-            maxZoom: 18,
-          }
-        ).addTo(this.map);
-      },
-      async calculateRoutes() {
-  if (!this.source || !this.destination) {
-    alert("Please enter both source and destination!");
-    return;
-  }
+    addBusMarkers(locations) {
+      locations.forEach(location => {
+        const marker = new google.maps.Marker({
+          position: location,
+          map: this.map,
+          title: 'Bus Stop',
+          icon: 'http://maps.google.com/mapfiles/ms/icons/bus.png',
+        });
+        this.busMarkers.push(marker);
+      });
+    },
+    calculateRoutes() {
+      if (!this.start || !this.end) {
+        alert('Please enter both start and end locations');
+        return;
+      }
 
-  try {
-    // Geocode source and destination
-    const geocodeBaseUrl = "https://us1.locationiq.com/v1/search.php";
-    const sourceResponse = await axios.get(geocodeBaseUrl, {
-      params: { q: this.source, format: "json", key: "pk.9f88024f3c74bfd657fb88d60557dc6d" },
-    });
-    const destinationResponse = await axios.get(geocodeBaseUrl, {
-      params: { q: this.destination, format: "json", key: "pk.9f88024f3c74bfd657fb88d60557dc6d" },
-    });
-
-    // Log the geocoding results for debugging
-    console.log('Source Response:', sourceResponse.data);
-    console.log('Destination Response:', destinationResponse.data);
-
-    const sourceCoords = [
-      parseFloat(sourceResponse.data[0].lat),
-      parseFloat(sourceResponse.data[0].lon),
-    ];
-    const destinationCoords = [
-      parseFloat(destinationResponse.data[0].lat),
-      parseFloat(destinationResponse.data[0].lon),
-    ];
-
-    // Add markers for source and destination
-    this.addMarker(sourceCoords, "Source");
-    this.addMarker(destinationCoords, "Destination");
-
-    // Directions API call
-    const coordinates = `${sourceCoords[1]},${sourceCoords[0]};${destinationCoords[1]},${destinationCoords[0]}`;
-    console.log('Coordinates:', coordinates);  // Log coordinates
-    const directionsUrl = `https://us1.locationiq.com/v1/directions/driving/${coordinates}?key=pk.9f88024f3c74bfd657fb88d60557dc6d&overview=full&geometries=geojson`;
-    const routeResponse = await axios.get(directionsUrl);
-
-    // Log the route response
-    console.log('Route Response:', routeResponse.data);
-
-    // Extract route coordinates and draw polyline
-    const routeCoordinates = routeResponse.data.routes[0].geometry.coordinates.map(
-      (coord) => [coord[1], coord[0]]
-    );
-    if (this.routeLayer) {
-      this.map.removeLayer(this.routeLayer);
-    }
-    this.routeLayer = L.polyline(routeCoordinates, {
-      color: "blue",
-      weight: 4,
-    }).addTo(this.map);
-
-    // Fit the map view to the route
-    this.map.fitBounds(this.routeLayer.getBounds());
-  } catch (error) {
-    console.error("Error fetching route:", error);
-    alert("Unable to fetch route. Please check your inputs or API key.");
-  }
-},
-
-
-      addMarker(coords, label) {
-        const marker = L.marker(coords).addTo(this.map).bindPopup(label);
-        this.markers.push(marker);
-      },
-      resetMap() {
-        this.map.setView([28.6139, 77.209], 13);
-  
-        // Remove all markers and routes
-        this.markers.forEach((marker) => this.map.removeLayer(marker));
-        this.markers = [];
-        if (this.routeLayer) {
-          this.map.removeLayer(this.routeLayer);
-          this.routeLayer = null;
+      const request = {
+        origin: this.start,
+        destination: this.end,
+        travelMode: google.maps.TravelMode.DRIVING,
+        provideRouteAlternatives: true,
+        drivingOptions: {
+          departureTime: new Date(),
+          trafficModel: 'bestguess',
         }
-      },
-      changeMapType() {
-        const tileLayerUrls = {
-          roadmap:
-            "https://{s}-tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=pk.9f88024f3c74bfd657fb88d60557dc6d",
-          satellite:
-            "https://{s}-tiles.locationiq.com/v3/satellite/r/{z}/{x}/{y}.png?key=pk.9f88024f3c74bfd657fb88d60557dc6d",
-        };
-        L.tileLayer(tileLayerUrls[this.mapType], {
-          attribution: "© LocationIQ contributors",
-          maxZoom: 18,
-        }).addTo(this.map);
-      },
+      };
+
+      this.directionsService.route(request, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          this.displayRoutes(result);
+        } else {
+          alert('Failed to get routes: ' + status);
+        }
+      });
     },
-    mounted() {
-      this.initMap();
+    displayRoutes(result) {
+      const routes = result.routes;
+      const routeList = document.getElementById('routeList');
+      routeList.innerHTML = '';
+
+      // Clear previous markers and polylines
+      this.markers.forEach(marker => marker.setMap(null));
+      this.markers = [];
+      this.polylines.forEach(polyline => polyline.setMap(null));
+      this.polylines = [];
+
+      // Set start and end markers
+      const startLocation = result.routes[0].legs[0].start_location;
+      const endLocation = result.routes[0].legs[0].end_location;
+
+      this.markers.push(new google.maps.Marker({
+        position: startLocation,
+        map: this.map,
+        title: 'Start',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+      }));
+
+      this.markers.push(new google.maps.Marker({
+        position: endLocation,
+        map: this.map,
+        title: 'End',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+      }));
+
+      routes.forEach((route, index) => {
+        const routeInfo = document.createElement('div');
+        const routeDistance = route.legs[0].distance.text;
+        const routeDuration = route.legs[0].duration.text;
+
+        routeInfo.innerHTML = `
+          <h3>Route ${index + 1}</h3>
+          <p>Distance: ${routeDistance}</p>
+          <p>Duration: ${routeDuration}</p>
+        `;
+
+        routeInfo.addEventListener('click', () => {
+          this.showRoute(index);
+        });
+
+        routeList.appendChild(routeInfo);
+
+        const polyline = new google.maps.Polyline({
+          path: route.overview_path,
+          strokeColor: this.getRouteColor(index),
+          strokeOpacity: 0.7,
+          strokeWeight: 5
+        });
+        polyline.setMap(this.map);
+        this.polylines.push(polyline);
+      });
+
+      const bounds = new google.maps.LatLngBounds();
+      routes.forEach(route => {
+        route.overview_path.forEach(point => {
+          bounds.extend(point);
+        });
+      });
+      this.map.fitBounds(bounds);
     },
-  };
-  </script>
-  
- 
+    showRoute(routeIndex) {
+      this.polylines.forEach(polyline => polyline.setMap(null));
+      this.polylines[routeIndex].setMap(this.map);
+    },
+    resetMap() {
+      this.start = '';
+      this.end = '';
+      document.getElementById('routeList').innerHTML = '';
+      this.markers.forEach(marker => marker.setMap(null));
+      this.markers = [];
+      this.polylines.forEach(polyline => polyline.setMap(null));
+      this.polylines = [];
+      this.busMarkers.forEach(marker => marker.setMap(null));
+      this.busMarkers = [];
+      this.map.setCenter({ lat: 22.5744, lng: 88.3629 });
+      this.map.setZoom(12);
+    },
+    toggleTrafficLayer() {
+      if (this.trafficLayer.getMap()) {
+        this.trafficLayer.setMap(null);
+      } else {
+        this.trafficLayer.setMap(this.map);
+      }
+    },
+    zoomIn() {
+      this.map.setZoom(this.map.getZoom() + 1);
+    },
+    zoomOut() {
+      this.map.setZoom(this.map.getZoom() - 1);
+    },
+    getRouteColor(index) {
+      switch (index) {
+        case 0: return '#28a745'; // Green for optimal route
+        case 1: return '#ffc107'; // Yellow for medium traffic
+        case 2: return '#dc3545'; // Red for high traffic
+        default: return '#007bff'; // Blue for other routes
+      }
+    },
+  }
+};
+</script>
+
 <style scoped>
-/* Overall Page Styling */
-.main {
+.ui-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(to right, #2c3e50, #3498db);
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  text-align: center;
 }
 
-.back-arrow {
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  top:0;
-  left:0;
-}
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: #f1c40f;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+/* Sidebar Styling */
+.sidebar {
+  width: 25%;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  /* display: flex;
+  flex-direction: column;
+  gap: 20px; */
 }
 
-/* Input Container Styling */
-.input-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+.input-section,
+.controls-section,
+.routes-section {
   margin-bottom: 20px;
 }
 
-.input-container input {
-  width: 300px;
-  padding: 10px 15px;
+.input-group input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.input-container input:focus {
-  outline: none;
-  border: 2px solid #3498db;
-}
-
-/* Button Styling */
-button {
-  background-color: #e74c3c;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-button:hover {
-  background-color: #c0392b;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-/* Map Controls */
-#controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-#controls select {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-/* Map Styling */
-.map {
-  position: relative;
-  height: 70vh;
-  width: 80vw;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Route List Styling */
-#routeList {
-  margin-top: 20px;
-  font-size: 1rem;
+  background-color: #34495e;
   color: #ecf0f1;
 }
 
+.input-group button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.input-group button:hover {
+  background-color: #c0392b;
+}
+
+.control-btn {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.control-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Map Styling */
+.map-container {
+  flex: 1;
+  background-color: #34495e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-container #map {
+  width: 95%;
+  height: 95%;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
 </style>
-
-
