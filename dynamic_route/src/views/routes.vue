@@ -3,6 +3,9 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Input Section -->
+       <div class="back-arrow" @click="$router.push('/')">
+        <i class="fa fa-arrow-left"></i>
+      </div>
       <div class="input-section">
         <div class="input-group">
           <input type="text" id="start" v-model="start" placeholder="Enter Starting Location" />
@@ -75,8 +78,8 @@ export default {
 
       this.trafficLayer = new google.maps.TrafficLayer();
 
-      this.autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('start'));
-      this.autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('end'));
+      // this.autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('start'));
+      // this.autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('end'));
 
       this.geocoder = new google.maps.Geocoder();
 
@@ -229,23 +232,34 @@ export default {
   display: flex;
   height: 100vh;
   width: 100vw;
+  background-color: #121212; /* Dark background for the whole container */
 }
-
+/* .back-arrow{
+  position: absolute;
+} */
 /* Sidebar Styling */
 .sidebar {
-  width: 30%;
-  background-color: #2c3e50;
-  color: #ecf0f1;
+  width: 22%;
+  background-color: #1c1c1c; /* Darker sidebar background */
+  color: #e0e0e0; /* Lighter text for contrast */
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  /* display: flex;
-  flex-direction: column;
-  gap: 20px; */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .input-section,
 .controls-section,
 .routes-section {
+  margin-bottom: 20px;
+  
+ 
+  
+}
+.input-group {
+  position: relative;
+}
+.sidebar .back-arrow {
+  font-size: 24px;
+  cursor: pointer;
   margin-bottom: 20px;
 }
 
@@ -255,43 +269,45 @@ export default {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #34495e;
-  color: #ecf0f1;
+  background-color: #2c2c2c; /* Darker input background */
+  color: #ffffff; /* White text */
 }
 
 .input-group button {
   width: 100%;
   padding: 10px;
   border: none;
-  background-color: #e74c3c;
+  background-color: #ff5722; /* Vibrant button color */
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  
 }
 
 .input-group button:hover {
-  background-color: #c0392b;
+  background-color: #e64a19; /* Slightly darker hover effect */
 }
 
 .control-btn {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  background-color: #3498db;
+  background-color: #f40313; /* Blue button color */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+ 
 }
 
 .control-btn:hover {
-  background-color: #2980b9;
+  background-color: #ef6060; /* Darker hover effect */
 }
 
 /* Map Styling */
 .map-container {
   flex: 1;
-  background-color: #34495e;
+  background-color: #383737; /* Match the sidebar background for cohesion */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -301,6 +317,60 @@ export default {
   width: 95%;
   height: 95%;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
 }
+.routes-section {
+  background-color: #2c2c2c; /* Slightly darker background */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add some depth */
+}
+
+.routes-section h2 {
+  color: #ff5722; /* Vibrant color for the title */
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.route-list {
+  max-height: 300px; /* Limit height for scrollability */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 10px;
+}
+
+.route-list div {
+  background-color: #3c3c3c; /* Dark card-like background */
+  color: #e0e0e0; /* Light text for contrast */
+  padding: 10px;
+  margin-bottom: 20px; /* Add space between routes */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.route-list div:last-child {
+  margin-bottom: 0; /* No space after the last route */
+}
+
+
+.route-list div:hover {
+  background-color: #ff5722; /* Highlight color on hover */
+  color: #ffffff; /* Ensure text remains visible */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.route-list h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.route-list p {
+  margin: 0;
+  font-size: 14px;
+}
+
+
+
 </style>
