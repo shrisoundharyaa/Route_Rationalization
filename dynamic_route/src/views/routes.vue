@@ -14,7 +14,7 @@
       <!-- Controls Section -->
       <div class="controls-section">
         <button class="control-btn" @click="resetMap">Reset Map</button>
-       
+        
       </div>
 
       <!-- Route List Section -->
@@ -229,33 +229,23 @@ export default {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(to right, #2c3e50, #3498db);
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  text-align: center;
 }
 
-.back-arrow {
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  top:0;
-  left:0;
-}
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: #f1c40f;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+/* Sidebar Styling */
+.sidebar {
+  width: 30%;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  /* display: flex;
+  flex-direction: column;
+  gap: 20px; */
 }
 
-/* Input Container Styling */
-.input-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+.input-section,
+.controls-section,
+.routes-section {
   margin-bottom: 20px;
 }
 
