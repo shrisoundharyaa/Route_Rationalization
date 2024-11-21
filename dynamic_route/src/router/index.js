@@ -3,6 +3,7 @@ import RealTimeMonitoring from "../views/RealTimeMonitoring.vue";
 import BusManagement from "../views/buses.vue"
 import RouteManagement from "../views/routes.vue"
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -22,6 +23,8 @@ const router = createRouter({
       name:"RouteManagement",
       component:RouteManagement
     },
+   
+    
     
   ],
 })
