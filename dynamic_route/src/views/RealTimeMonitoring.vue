@@ -1,14 +1,25 @@
 <template>
   <div class="container">
     <sidenav />
-    <div id="map" ref="map"></div>
+    <div  id="map" ref="map"></div>
+    <!-- <div id="controls">
+      <button @click="resetMap">Reset Map</button>
+      <select v-model="mapType" @change="changeMapType">
+        <option value="roadmap">Roadmap</option>
+        <option value="satellite">Satellite</option>
+        <option value="hybrid">Hybrid</option>
+        <option value="terrain">Terrain</option>
+      </select>
+      <button @click="toggleTrafficLayer">Toggle Traffic Layer</button>
+      <button @click="zoomIn">Zoom In</button>
+      <button @click="zoomOut">Zoom Out</button>
+    </div> -->
     <div id="routeList"></div>
   </div>
 </template>
 
 <script>
 import sidenav from '../components/sidenav.vue';
-
 export default {
   components: { sidenav },
   data() {
@@ -31,12 +42,11 @@ export default {
   mounted() {
     // Initialize Google Maps
     this.initMap();
-    this.loadKML();
   },
   methods: {
     initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
-        center: { lat: 28.6139, lng: 77.209 }, // Centered around Delhi
+        center: { lat: 28.6139, lng: 77.209 },
         zoom: 12,
         styles: [
           { elementType: 'geometry', stylers: [{ color: '#f5f5f5' }] },
@@ -46,12 +56,12 @@ export default {
           { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ffffff' }] },
           { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#e3f2fd' }] },
         ],
-        mapTypeControl: true,
+        mapTypeControl: true, // Enable map type control
         mapTypeControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_TOP,
-        },
+        position: google.maps.ControlPosition.RIGHT_TOP, // Position on the right top
+      },
       });
-
+      
       this.directionsService = new google.maps.DirectionsService();
       this.directionsRenderer = new google.maps.DirectionsRenderer();
       this.directionsRenderer.setMap(this.map);
@@ -66,10 +76,6 @@ export default {
 
       this.addBusMarkers(this.busMarkers);
     },
-   
-  
-   
-
     addBusMarkers(locations) {
       locations.forEach(location => {
         const marker = new google.maps.Marker({
@@ -174,6 +180,32 @@ export default {
       this.polylines.forEach(polyline => polyline.setMap(null));
       this.polylines[routeIndex].setMap(this.map);
     },
+    resetMap() {
+      this.start = '';
+      this.end = '';
+      document.getElementById('routeList').innerHTML = '';
+      this.markers.forEach(marker => marker.setMap(null));
+      this.markers = [];
+      this.polylines.forEach(polyline => polyline.setMap(null));
+      this.polylines = [];
+      this.busMarkers.forEach(marker => marker.setMap(null));
+      this.busMarkers = [];
+      this.map.setCenter({ lat: 22.5744, lng: 88.3629 });
+      this.map.setZoom(12);
+    },
+    toggleTrafficLayer() {
+      if (this.trafficLayer.getMap()) {
+        this.trafficLayer.setMap(null);
+      } else {
+        this.trafficLayer.setMap(this.map);
+      }
+    },
+    zoomIn() {
+      this.map.setZoom(this.map.getZoom() + 1);
+    },
+    zoomOut() {
+      this.map.setZoom(this.map.getZoom() - 1);
+    },
     getRouteColor(index) {
       switch (index) {
         case 0: return '#28a745'; // Green for optimal route
@@ -182,18 +214,41 @@ export default {
         default: return '#007bff'; // Blue for other routes
       }
     },
+    changeMapType() {
+      this.map.setMapTypeId(this.mapType);
+    },
   }
 };
 </script>
 
 <style scoped>
 #map {
-  position: absolute;
+  position: absolute; 
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
+  height: 100vh; 
+  width: 100vw; 
 }
+
+#controls {
+  margin-top: 10px;
+}
+
+input {
+  margin: 10px;
+  padding: 5px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+select {
+  margin: 10px;
+}
+
 .container {
   text-align: center;
 }
