@@ -97,6 +97,7 @@ export default {
       });
     },
     calculateRoutes() {
+      this.clearRouteData();
       if (!this.start || !this.end) {
         alert('Please enter both start and end locations');
         return;
@@ -124,7 +125,7 @@ export default {
     displayRoutes(result) {
       const routes = result.routes;
       const routeList = document.getElementById('routeList');
-      routeList.innerHTML = '';
+      routeList.innerHTML = ''; 
 
       // Clear previous markers and polylines
       this.markers.forEach(marker => marker.setMap(null));
@@ -159,6 +160,7 @@ export default {
           <h3>Route ${index + 1}</h3>
           <p>Distance: ${routeDistance}</p>
           <p>Duration: ${routeDuration}</p>
+          <P></p>
         `;
 
         routeInfo.addEventListener('click', () => {
@@ -190,31 +192,40 @@ export default {
       this.polylines[routeIndex].setMap(this.map);
     },
     resetMap() {
-      this.start = '';
-      this.end = '';
-      document.getElementById('routeList').innerHTML = '';
-      this.markers.forEach(marker => marker.setMap(null));
-      this.markers = [];
-      this.polylines.forEach(polyline => polyline.setMap(null));
-      this.polylines = [];
-      this.busMarkers.forEach(marker => marker.setMap(null));
-      this.busMarkers = [];
-      this.map.setCenter({ lat: 22.5744, lng: 88.3629 });
+      // this.start = '';
+      // this.end = '';
+      
+      // document.getElementById('routeList').innerHTML = '';
+      // this.markers.forEach(marker => marker.setMap(null));
+      // this.markers = [];
+      // this.polylines.forEach(polyline => polyline.setMap(null));
+      // this.polylines = [];
+      // this.busMarkers.forEach(marker => marker.setMap(null));
+      // this.busMarkers = [];
+       window.location.reload();
+      this.map.setCenter({lat: 28.6139, lng: 77.209 });
       this.map.setZoom(12);
+      // this.start = null;
+      // this.end = null;
+      // this.clearRouteData();
     },
-    toggleTrafficLayer() {
-      if (this.trafficLayer.getMap()) {
-        this.trafficLayer.setMap(null);
-      } else {
-        this.trafficLayer.setMap(this.map);
-      }
-    },
-    zoomIn() {
-      this.map.setZoom(this.map.getZoom() + 1);
-    },
-    zoomOut() {
-      this.map.setZoom(this.map.getZoom() - 1);
-    },
+   
+
+    clearRouteData() {
+  // Clear existing markers
+  this.markers.forEach(marker => marker.setMap(null));
+  this.markers = [];
+
+  // Clear existing polylines
+  this.polylines.forEach(polyline => polyline.setMap(null));
+  this.polylines = [];
+
+  // Clear directions from DirectionsRenderer
+  if (this.directionsRenderer) {
+    this.directionsRenderer.setDirections({ routes: [] });
+  }
+},
+
     getRouteColor(index) {
       switch (index) {
         case 0: return '#28a745'; // Green for optimal route
