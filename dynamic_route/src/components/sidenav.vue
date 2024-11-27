@@ -2,7 +2,31 @@
   <div class="main">
     <nav class="sidenav">
       <div class="top-section"></div>
-      <div class="middle-section">
+      <div class="selected-bus" v-if="selectedBus">
+        <div class="bus-card">
+          <p><strong>Driver Name:</strong></p>
+          <div class="value">{{ selectedBus.details.driverName }}</div>
+        </div>
+        <div class="bus-card">
+          <p><strong>Source:</strong></p>
+          <div class="value">{{ selectedBus.details.source }}</div>
+        </div>
+        <div class="bus-card">
+          <p><strong>Destination:</strong></p>
+          <div class="value">{{ selectedBus.details.destination }}</div>
+        </div>
+        <div class="bus-card-s">
+          <div class="value"><strong>Bus ID: </strong>{{ selectedBus.details.busId }}</div>
+          <div class="value"><strong>Route ID: </strong>{{ selectedBus.details.routeId }}</div>
+        </div>
+      
+        <div class="bus-card">
+          <p><strong>Delay Time:</strong></p>
+          <div class="value">{{ selectedBus.details.delayTime }} mins</div>
+        </div>
+        <button @click="$emit('closeOverlay')">Close Details</button>
+      </div>
+      <div class="middle-section" v-else>
         <!-- Add congestion and accident levels -->
         <ul class="status-list">
           <li class="status-item high">
@@ -23,10 +47,10 @@
           </li>
         </ul>
       </div>
-      
+
       <ul class="bottom-menu">
         <li>
-          <i class="fas fa-map-marker-alt"></i> 
+          <i class="fas fa-map-marker-alt"></i>
           <p>Map</p>
         </li>
         <li @click="$router.push('/buses')">
@@ -46,10 +70,18 @@
   </div>
 </template>
 
+
+
 <script>
 export default {
   name: 'Sidebar',
-  methods: {}
+  methods: {},
+  props: {
+    selectedBus: {
+      type: Object,
+      required: false,
+    },
+  },
 };
 </script>
 
@@ -57,7 +89,7 @@ export default {
 .sidenav {
   height: 670px;
   border-radius: 10px;
-  width: 300px;
+  width: 350px;
   background-color: rgb(44, 44, 44);
   color: rgb(255, 255, 255);
   padding: 20px;
@@ -70,14 +102,91 @@ export default {
   z-index: 1000;
   box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
   transition: width 0.3s ease;
+  overflow: scroll;
 }
 
+.sidenav::-webkit-scrollbar {
+  display: none;
+}
+
+.sidenav {
+  scrollbar-width: none;
+}
+
+.selected-bus {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 5px;
+  background-color: rgb(44, 44, 44);
+  margin-bottom: 20px;
+}
+
+.bus-card {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: rgb(60, 60, 60);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align content to the left */
+}
+.bus-card-s{
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: rgb(60, 60, 60);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  
+
+}
+.bus-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #fff;
+}
+
+.bus-card .value {
+  margin-top: 5px;
+  padding: 10px;
+  text-align: left;
+  color: #fff;
+  border-radius: 5px;
+  width: 100%;
+}
+.bus-card-s .value{
+  margin-right: 20px;
+}
+
+.bus-card strong {
+  color: rgb(255, 165, 0);
+}
+.bus-card-s strong {
+  color: rgb(255, 165, 0);
+  margin-right: 5px;
+}
+
+.selected-bus button {
+  padding: 10px;
+  font-size: 14px;
+  color: white;
+  background-color: rgb(255, 77, 77);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: all 0.3s;
+}
+
+.selected-bus button:hover {
+  background-color: rgb(255, 99, 71);
+}
 .middle-section {
   margin-bottom: 250px;
 }
-/* .top-section{
-  margin-top: 20px;
-} */
 .status-list {
   list-style-type: none;
   padding: 0;
@@ -149,9 +258,10 @@ export default {
 .bottom-menu i {
   font-size: 18px;
 }
+
 .between {
   margin-left: auto;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <sidenav />
+    <sidenav :selected-bus="selectedBus" @closeOverlay="selectedBus = null" />
     <div id="map" ref="map"></div>
     <div id="routeList"></div>
   </div>
@@ -16,15 +16,18 @@ export default {
     return {
       map: null,
       trafficLayer: null,
-      buses: [], // Store each bus's data
+      buses: [],
       directionsService: null,
+      routes: [],
+      selectedBus: null,
+      geocoder: null, 
     };
   },
   mounted() {
     this.initMap();
   },
   methods: {
-    initMap() {
+    async initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
         center: { lat: 28.6139, lng: 77.209 }, // Center the map on Delhi
         zoom: 12,
@@ -46,25 +49,29 @@ export default {
       this.trafficLayer.setMap(this.map);
 
       this.directionsService = new google.maps.DirectionsService();
+      this.geocoder = new google.maps.Geocoder(); // Initialize the geocoder
 
-      // Define routes for 3 buses
-      const routes = [
-        { start: { lat: 28.6139, lng: 77.209 }, end: { lat: 28.6190, lng: 77.220 } }, // Route 1
-        { start: { lat: 28.6358, lng: 77.2245 }, end: { lat: 28.6467, lng: 77.2310 } }, // Route 2
-        { start: { lat: 28.6055, lng: 77.2000 }, end: { lat: 28.5903, lng: 77.1804 } }, // Route 3
-      ];
+      await this.loadRoutes();
 
-      // Initialize buses with unique routes
-      routes.forEach((route, index) => this.initBus(route, index));
+      this.routes.forEach((route, index) => this.initBus(route, index)); 
+      this.map.addListener('zoom_changed', () => {
+        const zoomLevel = this.map.getZoom();
+        this.updateBusMarkerSizes(zoomLevel);
+      });
     },
-    initBus(route, index) {
-      const busIconOptions = {
-        url: busIcon,
-        size: new google.maps.Size(40, 40),
-        scaledSize: new google.maps.Size(40, 40),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(20, 20),
-      };
+    async loadRoutes() {
+      try {
+        const response = await fetch('/buses.json');
+        if (!response.ok) {
+          throw new Error('Failed to load routes');
+        }
+        this.routes = await response.json();
+      } catch (error) {
+        console.error('Error loading routes:', error);
+      }
+    },
+    async initBus(route, index) {
+      const busIconOptions = this.getBusIconSize(this.map.getZoom());
 
       const busMarker = new google.maps.Marker({
         position: route.start,
@@ -72,26 +79,28 @@ export default {
         icon: busIconOptions,
         title: `Bus ${index + 1}`,
       });
+      
+      busMarker.addListener('click', () => {
+        this.geocodeCoordinates(route.start, route.end, index);
+      });
 
       const directionsRenderer = new google.maps.DirectionsRenderer({
         map: this.map,
-        suppressMarkers: true, // Suppress default markers to avoid duplicate markers
+        suppressMarkers: true,
         polylineOptions: {
-          strokeColor: this.getRandomColor(), // Random color for each route
+          strokeColor: this.getRandomColor(),
           strokeWeight: 4,
         },
       });
 
-      // Add bus details to the buses array
       this.buses.push({
         marker: busMarker,
         directionsRenderer,
         currentStep: 0,
-        route: [], // Store route path for animation
+        route: [],
         animationInterval: null,
       });
 
-      // Fetch and display the route
       this.calculateRoute(route, index);
     },
     calculateRoute(route, index) {
@@ -104,29 +113,96 @@ export default {
       this.directionsService.route(request, (result, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
           const routePath = result.routes[0].overview_path;
-          this.buses[index].route = routePath; // Store route path for animation
+          this.buses[index].route = routePath;
 
-          // Display the route using DirectionsRenderer
           this.buses[index].directionsRenderer.setDirections(result);
 
-          // Start bus animation along the route
           this.startBusAnimation(this.buses[index]);
         } else {
           console.error('Directions request failed for bus ' + (index + 1) + ': ' + status);
         }
       });
     },
+    getBusIconSize(zoomLevel) {
+
+      const baseSize = 20;
+
+      const scaleFactor = 1 + (zoomLevel - 15) * 0.1;  // Adjust the factor as needed
+      const iconSize = baseSize * scaleFactor;
+
+      return {
+        url: busIcon,
+        size: new google.maps.Size(iconSize, iconSize),
+        scaledSize: new google.maps.Size(iconSize, iconSize),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(iconSize / 2, iconSize / 2),
+      };
+    },
+    updateBusMarkerSizes(zoomLevel) {
+      this.buses.forEach(bus => {
+        const newIcon = this.getBusIconSize(zoomLevel);
+        bus.marker.setIcon(newIcon);  // Update the marker's icon with new size
+      });
+    },
+
+
+    async geocodeCoordinates(start, end, index) {
+      try {
+        const startPlace = await this.reverseGeocode(start);
+        const endPlace = await this.reverseGeocode(end);
+
+        this.selectedBus = {
+          details: {
+            driverName: `Driver ${index + 1}`,
+            source: startPlace,
+            destination: endPlace,
+            busId: `Bus-${index + 1}`,
+            routeId: `Route-${index + 1}`,
+            delayTime: Math.floor(Math.random() * 30) + 1,
+          },
+        };
+      } catch (error) {
+        console.error('Geocoding error:', error);
+      }
+    },
+    reverseGeocode(latLng) {
+      return new Promise((resolve, reject) => {
+        this.geocoder.geocode({ location: latLng }, (results, status) => {
+          if (status === google.maps.GeocoderStatus.OK && results[0]) {
+            resolve(results[0].formatted_address);
+          } else {
+            reject('Geocode failed: ' + status);
+          }
+        });
+      });
+    },
     startBusAnimation(bus) {
       bus.currentStep = 0;
+      bus.directionForward = true;
 
       bus.animationInterval = setInterval(() => {
-        if (bus.currentStep < bus.route.length - 1) {
-          bus.currentStep++;
-          bus.marker.setPosition(bus.route[bus.currentStep]); // Move the bus marker
-        } else {
-          clearInterval(bus.animationInterval); // Stop animation when route ends
-        }
-      }, 1000); // Update position every second
+        if (bus.directionForward) {
+              if (bus.currentStep < bus.route.length - 1) {
+                bus.currentStep++;
+              } else {
+                bus.directionForward = false;  
+                bus.currentStep--;  
+              }
+            } else {
+              if (bus.currentStep > 0) {
+                bus.currentStep--;
+              } else {
+                bus.directionForward = true;  
+                bus.currentStep++; 
+              }
+            }
+
+        
+            bus.marker.setPosition(bus.route[bus.currentStep]);
+          }, 1000); 
+    },
+    closeOverlay() {
+      this.selectedBus = null;
     },
     getRandomColor() {
       const letters = '0123456789ABCDEF';
@@ -148,7 +224,38 @@ export default {
   height: 100vh;
   width: 100vw;
 }
+
 .container {
   text-align: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  color: black;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.overlay-content {
+  text-align: left;
+}
+
+button {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1976d2;
 }
 </style>
