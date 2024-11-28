@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <nav class="sidenav">
+      
       <div class="top-section"></div>
       <div class="selected-bus" v-if="selectedBus">
         <div class="bus-card">
@@ -16,10 +17,9 @@
           <div class="value">{{ selectedBus.details.destination }}</div>
         </div>
         <div class="bus-card-s">
-          <div class="value"><strong>Bus ID: </strong>{{ selectedBus.details.busId }}</div>
-          <div class="value"><strong>Route ID: </strong>{{ selectedBus.details.routeId }}</div>
+          <div class="value"><strong>Bus ID:</strong> {{ selectedBus.details.busId }}</div>
+          <div class="value"><strong>Route ID:</strong> {{ selectedBus.details.routeId }}</div>
         </div>
-      
         <div class="bus-card">
           <p><strong>Delay Time:</strong></p>
           <div class="value">{{ selectedBus.details.delayTime }} mins</div>
@@ -27,7 +27,10 @@
         <button @click="$emit('closeOverlay')">Close Details</button>
       </div>
       <div class="middle-section" v-else>
-        <!-- Add congestion and accident levels -->
+        <!-- Updated congestion and accident levels -->
+        <div class="back-arrow" @click="$router.push('/')">
+        <i class="fa fa-arrow-left"></i>
+      </div>
         <ul class="status-list">
           <li class="status-item high">
             <i class="fas fa-traffic-light"></i> High Congestion
@@ -47,22 +50,6 @@
           </li>
         </ul>
       </div>
-
-      <ul class="bottom-menu">
-        <li>
-          <i class="fas fa-map-marker-alt"></i>
-          <p>Map</p>
-        </li>
-        <li @click="$router.push('/buses')">
-          <i class="fas fa-bus"></i> Buses
-        </li>
-        <li @click="$router.push('/routes')">
-          <i class="fas fa-route"></i> Routes
-        </li>
-        <li>
-          <i class="fas fa-chart-line"></i> Analytics
-        </li>
-      </ul>
     </nav>
     <div class="content">
       <!-- Content of the page goes here -->
@@ -70,12 +57,9 @@
   </div>
 </template>
 
-
-
 <script>
 export default {
-  name: 'Sidebar',
-  methods: {},
+  name: "Sidebar",
   props: {
     selectedBus: {
       type: Object,
@@ -86,12 +70,12 @@ export default {
 </script>
 
 <style scoped>
-.sidenav {
+/* .sidenav {
   height: 670px;
   border-radius: 10px;
-  width: 350px;
-  background-color: rgb(44, 44, 44);
-  color: rgb(255, 255, 255);
+  width: 250px;
+  background-color: #2c2c2c;
+  color: #fff;
   padding: 20px;
   position: fixed;
   display: flex;
@@ -99,11 +83,11 @@ export default {
   justify-content: space-between;
   top: 20px;
   left: 20px;
-  z-index: 1000;
+  
   box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
-  transition: width 0.3s ease;
-  overflow: scroll;
-}
+ 
+  transition: all 0.3s ease;
+} */
 
 .sidenav::-webkit-scrollbar {
   display: none;
@@ -112,6 +96,16 @@ export default {
 .sidenav {
   scrollbar-width: none;
 }
+.sidebar .back-arrow {
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.back-arrow {
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
 
 .selected-bus {
   font-size: 14px;
@@ -119,58 +113,43 @@ export default {
   flex-direction: column;
   gap: 15px;
   border-radius: 5px;
-  background-color: rgb(44, 44, 44);
+  background-color: #2c2c2c;
   margin-bottom: 20px;
 }
 
 .bus-card {
   padding: 10px 15px;
   border-radius: 8px;
-  background-color: rgb(60, 60, 60);
+  background-color: #3c3c3c;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align content to the left */
 }
-.bus-card-s{
+
+.bus-card-s {
   padding: 10px 15px;
   border-radius: 8px;
-  background-color: rgb(60, 60, 60);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #3c3c3c;
   display: flex;
-  
-
-}
-.bus-card p {
-  margin: 0;
-  font-size: 14px;
-  color: #fff;
+  justify-content: space-between;
 }
 
 .bus-card .value {
   margin-top: 5px;
   padding: 10px;
-  text-align: left;
   color: #fff;
   border-radius: 5px;
   width: 100%;
-}
-.bus-card-s .value{
-  margin-right: 20px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.bus-card strong {
-  color: rgb(255, 165, 0);
-}
-.bus-card-s strong {
-  color: rgb(255, 165, 0);
-  margin-right: 5px;
+.bus-card-s .value {
+  margin-right: 10px;
 }
 
 .selected-bus button {
-  padding: 10px;
+  padding: 10px 15px;
   font-size: 14px;
   color: white;
   background-color: rgb(255, 77, 77);
@@ -184,9 +163,11 @@ export default {
 .selected-bus button:hover {
   background-color: rgb(255, 99, 71);
 }
+
 .middle-section {
   margin-bottom: 250px;
 }
+
 .status-list {
   list-style-type: none;
   padding: 0;
@@ -198,20 +179,14 @@ export default {
   padding: 10px;
   display: flex;
   align-items: center;
-  
   gap: 10px;
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 10px;
 }
 
-.status-item i {
-  font-size: 18px;
-}
-
 .status-item.high {
   background-color: rgb(255, 77, 77);
-  
 }
 
 .status-item.medium {
@@ -230,38 +205,8 @@ export default {
   opacity: 0.8;
 }
 
-.bottom-menu {
-  display: flex;
-  justify-content: space-around;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.bottom-menu li {
-  font-weight: 600;
-  font-size: 14px;
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
-
-.bottom-menu li:hover {
-  background-color: #3f3e3e;
-  border-radius: 5px;
-}
-
-.bottom-menu i {
-  font-size: 18px;
-}
-
 .between {
   margin-left: auto;
   font-weight: bold;
 }
-
 </style>

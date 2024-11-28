@@ -1,8 +1,16 @@
 <template>
-  <div class="container">
-    <sidenav :selected-bus="selectedBus" @closeOverlay="selectedBus = null" />
-    <div id="map" ref="map"></div>
-    <div id="routeList"></div>
+  <div class="main-container">
+    <div class="left-container">
+      <sidenav :selected-bus="selectedBus" @closeOverlay="selectedBus = null" />
+     
+    </div>
+    
+    <div class="right-container">
+      <div class="map-container">
+        <div id="map" ref="map"></div>
+      </div>
+      <div id="routeList"></div>
+    </div>
   </div>
 </template>
 
@@ -217,33 +225,48 @@ export default {
 </script>
 
 <style scoped>
-#map {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
+.main-container {
+  display: flex; /* Align children horizontally */
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
 }
 
-.container {
-  text-align: center;
+.left-container {
+  width: 25%; 
+  background-color: #222222; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
 }
 
-.overlay {
-  position: fixed;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  color: black;
+.right-container {
+  width: 100%; /* Takes up the other half of the page */
+  background-color: #383737; /* Light contrast to the left side */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  z-index: 1000;
 }
 
-.overlay-content {
-  text-align: left;
+.map-container {
+  width: 100%; /* Full width within the right container */
+  height: 100%; /* Adjust height as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 2px solid #0b0b0b; */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+}
+
+#map {
+  width: 100%; /* Slight padding within the container */
+  height: 100%; /* Full height */
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 button {
