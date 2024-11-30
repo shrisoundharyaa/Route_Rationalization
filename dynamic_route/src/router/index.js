@@ -4,6 +4,8 @@ import BusManagement from "../views/buses.vue"
 import RouteManagement from "../views/routes.vue"
 import Dashboard from "../views/dashboard.vue"
 import Businfo from "../views/businfo.vue"
+import Depot from "../views/depot.vue"
+import DepotDetail from "../views/depotDetail.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +19,16 @@ const router = createRouter({
       path:'/businfo',
       name:'Businfo',
       component:Businfo
+    },
+    {
+      path:'/depot',
+      name:'Depot',
+      component:Depot,
+    },
+    {
+      path:'/depot/:id',
+      component:DepotDetail,
+      props:true
     },
     {
       path: '/real',
@@ -39,5 +51,6 @@ const router = createRouter({
     
   ],
 })
+
 
 export default router
