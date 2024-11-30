@@ -1,9 +1,10 @@
 <template>
   <div class="main-container">
-    <div class="left-container">
+    
+    
       <sidenav :selected-bus="selectedBus" @closeOverlay="selectedBus = null" />
-     
-    </div>
+   
+   
     
     <div class="right-container">
       <div class="map-container">
@@ -225,10 +226,12 @@ export default {
 </script>
 
 <style scoped>
+
 .main-container {
-  display: flex; /* Align children horizontally */
-  height: 100vh; /* Full viewport height */
-  width: 100vw; /* Full viewport width */
+  display: flex; 
+  height: 100vh; 
+  width: 100vw; 
+  background-color: #e7e7e7;
 }
 
 .left-container {
@@ -238,11 +241,12 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 32px;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5); /* Inner shadow for depth */
 }
 
 .right-container {
-  width: 100%; /* Takes up the other half of the page */
-  background-color: #383737; /* Light contrast to the left side */
+  width: 100%; 
+  background-color: #e7e7e7; 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -251,16 +255,15 @@ export default {
 }
 
 .map-container {
-  width: 100%; /* Full width within the right container */
-  height: 100%; /* Adjust height as needed */
+  width: 95%; 
+  height: 85%; 
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border: 2px solid #0b0b0b; */
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   
 }
+
 
 #map {
   width: 100%; /* Slight padding within the container */

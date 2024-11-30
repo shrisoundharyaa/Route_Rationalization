@@ -1,36 +1,34 @@
 <template>
   <div class="main">
     <nav class="sidenav">
-      
-      <div class="top-section"></div>
-      <div class="selected-bus" v-if="selectedBus">
+     
+    <div class="selected-bus" v-if="selectedBus">
+     
         <div class="bus-card">
+          <h1 class ="name">BUS Details </h1>
+          <div class="val"><strong>Bus ID:</strong> {{ selectedBus.details.busId }}</div>
+          <div class="val"><strong>Route ID:</strong> {{ selectedBus.details.routeId }}</div>
           <p><strong>Driver Name:</strong></p>
           <div class="value">{{ selectedBus.details.driverName }}</div>
-        </div>
-        <div class="bus-card">
           <p><strong>Source:</strong></p>
           <div class="value">{{ selectedBus.details.source }}</div>
-        </div>
-        <div class="bus-card">
           <p><strong>Destination:</strong></p>
           <div class="value">{{ selectedBus.details.destination }}</div>
-        </div>
-        <div class="bus-card-s">
-          <div class="value"><strong>Bus ID:</strong> {{ selectedBus.details.busId }}</div>
-          <div class="value"><strong>Route ID:</strong> {{ selectedBus.details.routeId }}</div>
-        </div>
-        <div class="bus-card">
+         
           <p><strong>Delay Time:</strong></p>
           <div class="value">{{ selectedBus.details.delayTime }} mins</div>
+          <div class="button">
+          <button @click="$emit('closeOverlay')">Close Details</button>
         </div>
-        <button @click="$emit('closeOverlay')">Close Details</button>
-      </div>
+        </div>
+  </div>
+      
+  
       <div class="middle-section" v-else>
         <!-- Updated congestion and accident levels -->
         <div class="back-arrow" @click="$router.push('/')">
         <i class="fa fa-arrow-left"></i>
-      </div>
+         </div>
         <ul class="status-list">
           <li class="status-item high">
             <i class="fas fa-traffic-light"></i> High Congestion
@@ -68,145 +66,181 @@ export default {
   },
 };
 </script>
-
 <style scoped>
-/* .sidenav {
-  height: 670px;
-  border-radius: 10px;
-  width: 250px;
-  background-color: #2c2c2c;
-  color: #fff;
-  padding: 20px;
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  top: 20px;
-  left: 20px;
-  
-  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
- 
-  transition: all 0.3s ease;
-} */
 
-.sidenav::-webkit-scrollbar {
-  display: none;
-}
-
-.sidenav {
-  scrollbar-width: none;
-}
-.sidebar .back-arrow {
-  font-size: 24px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
 .back-arrow {
   font-size: 24px;
   cursor: pointer;
-  margin-bottom: 20px;
+  color: #2d2d2d;
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  z-index: 100;
+  transition: color 0.3s;
+  
 }
 
+.back-arrow:hover {
+  color: #535151;
+}
+
+
+/* Selected bus details container */
 .selected-bus {
-  font-size: 14px;
+    font-size: 14px; 
+  
+    
+    /* padding: 24px;  */
+    height: 95vh; 
+    background: #d1d1d1;
+    display: flex;
+    flex-direction: column;
+    margin:10px 0px 0px 40px;
+    border-radius: 10px;
+   
+
+  }
+
+
+
+ 
+
+.name{
+  position: fixed;
+ top:15px;
+  color: #080808;
+}
+
+  /* Individual bus card styling */
+  .bus-card {
+
+  padding: 25px; 
+  color: #565448;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  border-radius: 5px;
-  background-color: #2c2c2c;
-  margin-bottom: 20px;
+  gap: 5px;
+  height: 95vh; 
+  margin: 40px 0px 0px 0px;
+  
+  
 }
 
-.bus-card {
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: #3c3c3c;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-}
 
-.bus-card-s {
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: #3c3c3c;
-  display: flex;
-  justify-content: space-between;
-}
+  
 
-.bus-card .value {
-  margin-top: 5px;
-  padding: 10px;
-  color: #fff;
-  border-radius: 5px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-}
+ 
+  .bus-card .value {
+    margin-top: 12px;
+    padding: 12px;
+    color: #565448; /* Neutral color for readability */
+    font-weight: 500; /* Slightly bold for emphasis */
+   
+    background-color: #b6b6b6; /* Light background for contrast */
+    border-radius: 8px;
+  }
+  .val{
+    margin-top: 12px;
+    padding: 12px;
+    color: #565448; /* Neutral color for readability */
+    font-weight: 500; /* Slightly bold for emphasis */
+     /* Subtle border for detail */
+    border-radius: 8px;
+    background-color: #b6b6b6;
+  }
 
-.bus-card-s .value {
-  margin-right: 10px;
-}
-
+/* Button styles */
 .selected-bus button {
   padding: 10px 15px;
-  font-size: 14px;
-  color: white;
-  background-color: rgb(255, 77, 77);
-  border: none;
-  border-radius: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6b6b, #ff4d4d); /* Vibrant gradient */
+  border:none;
+  border-radius: 15px; 
   cursor: pointer;
-  align-self: flex-end;
-  transition: all 0.3s;
+  display:flex;
+  align-items: flex-end;
+ 
+
 }
 
 .selected-bus button:hover {
-  background-color: rgb(255, 99, 71);
+  background: linear-gradient(135deg, #ff4d4d, #ff3333); /* Darker hover gradient */
+  
+ 
 }
+
 
 .middle-section {
-  margin-bottom: 250px;
+  display: flex; 
+  flex-direction: column;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 93vh; 
+  width: 20vw; 
+  background-color: #d1d1d1;
+  margin: 20px 20px 0px 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions */
 }
 
+.middle-section:hover {
+ 
+  box-shadow: 0 8px 16px rgba(147, 145, 145, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Status list */
 .status-list {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  margin : 0px 40px 140px 0px
+  
+ 
+
+ 
 }
 
 .status-item {
   font-size: 14px;
-  padding: 10px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  color: #565448;
+  transition: transform 0.3s, background-color 0.3s ease-in-out;
+ 
 }
 
 .status-item.high {
-  background-color: rgb(255, 77, 77);
+  background: linear-gradient(145deg, #ff4d4d, #ff6666);
 }
 
 .status-item.medium {
-  background-color: rgb(255, 165, 0);
+  background: linear-gradient(145deg, #ffa500, #ffb733);
 }
 
 .status-item.low {
-  background-color: rgb(144, 238, 144);
+  background: linear-gradient(145deg, #90ee90, #a8f5a8);
 }
 
 .status-item.accident {
-  background-color: rgb(255, 99, 71);
+  background: linear-gradient(145deg, #ff6347, #ff7b6b);
 }
 
 .status-item:hover {
-  opacity: 0.8;
+  transform: scale(1.02);
+  opacity: 0.9;
 }
 
 .between {
   margin-left: auto;
   font-weight: bold;
 }
+
+
 </style>
