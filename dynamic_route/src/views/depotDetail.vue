@@ -4,14 +4,8 @@
       <div v-if="depot" class="depot-details">
         <h2>{{ depot.name }}</h2>
         <p><strong>Total Capacity:</strong> {{ depot.capacity }}</p>
-        <p><strong>Buses Present:</strong> {{ depot.buses.length }}</p>
-        <h3>Buses in Depot:</h3>
-        <ul>
-          <li v-for="bus in depot.buses" :key="bus.id" class="bus-item">
-            <span><strong>Bus ID:</strong> {{ bus.id }}</span> 
-            <span><strong>Status:</strong> {{ bus.status }}</span>
-          </li>
-        </ul>
+       
+
         <button @click="goBack">Go Back</button>
       </div>
       <div v-else>
@@ -45,7 +39,7 @@
         }
       },
       goBack() {
-        this.$router.push('/'); // Navigate back to the main depot list page
+        this.$router.push('/depot'); // Navigate back to the main depot list page
       },
     },
   };

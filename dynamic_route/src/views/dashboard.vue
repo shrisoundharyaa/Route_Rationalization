@@ -76,10 +76,10 @@ export default {
         
       };
 
-      this.topLeftMap = this.initMap(this.$refs.topLeftMap, mapOptions);
-      this.topRightMap = this.initMap(this.$refs.topRightMap, mapOptions);
-      this.bottomLeftMap = this.initMap(this.$refs.bottomLeftMap, mapOptions);
-      this.bottomRightMap = this.initMap(this.$refs.bottomRightMap, mapOptions);
+      // this.topLeftMap = this.initMap(this.$refs.topLeftMap, mapOptions);
+      // this.topRightMap = this.initMap(this.$refs.topRightMap, mapOptions);
+      // this.bottomLeftMap = this.initMap(this.$refs.bottomLeftMap, mapOptions);
+      // this.bottomRightMap = this.initMap(this.$refs.bottomRightMap, mapOptions);
 
       const trafficLayer = new google.maps.TrafficLayer();
       trafficLayer.setMap(this.topLeftMap)
