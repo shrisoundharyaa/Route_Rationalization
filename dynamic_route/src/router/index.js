@@ -6,6 +6,7 @@ import Dashboard from "../views/dashboard.vue"
 import Businfo from "../views/businfo.vue"
 import Depot from "../views/depot.vue"
 import DepotDetail from "../views/depotDetail.vue"
+import NewDashboard from "../views/NewDashboard.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,7 +47,11 @@ const router = createRouter({
       name:"RouteManagement",
       component:RouteManagement
     },
-   
+    {
+      path:'/newdashboard',
+      name:"NewDashboard",
+      component:NewDashboard
+    },
     
     
   ],
