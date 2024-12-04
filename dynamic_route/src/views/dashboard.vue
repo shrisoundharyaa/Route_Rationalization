@@ -13,7 +13,9 @@
             <li @click="$router.push('/routes')">
           <i class="fas fa-route"></i> Routes
         </li>
-          <li @click="$router.push('')"></li>
+          <li @click="$router.push('/depot')">
+            <i class="fas fa-warehouse"></i> Depot
+          </li>
        
           </ul>
         </nav>
