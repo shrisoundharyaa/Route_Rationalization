@@ -46,7 +46,11 @@ const router = createRouter({
       name:"RouteManagement",
       component:RouteManagement
     },
-   
+    {
+      path:'/newdashboard',
+      name:"newdashboard",
+      component:RouteManagement
+    },
     
     
   ],
