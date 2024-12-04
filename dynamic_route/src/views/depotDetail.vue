@@ -173,11 +173,10 @@ export default {
 </script>
 
 <style scoped>
-/* General page style */
 .main {
-  background-color: #1c1c1c;
-  color: #f1f1f1;
-  font-family: 'Arial', sans-serif;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   min-height: 100vh;
   display: flex;
@@ -189,8 +188,8 @@ export default {
 
 /* Depot Details Box */
 .depot-details {
-  background-color: #2e2e2e;
-  color: #f1f1f1;
+  background-color: #161b22;
+  color: #c9d1d9;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
@@ -223,14 +222,18 @@ export default {
   flex: 1;
   padding: 10px 15px;
   border-radius: 6px;
-  border: 1px solid #444;
-  color: #f1f1f1;
-  background-color: #333;
+  border: none;
+  color: #c9d1d9;
+  background-color: #21262d;
   font-size: 1rem;
 }
 
+.search-bar::placeholder {
+  color: #8b949e;
+}
+
 .add-bus-btn {
-  background-color: #4caf50;
+  background-color: #238636;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -241,7 +244,7 @@ export default {
 }
 
 .add-bus-btn:hover {
-  background-color: #45a049;
+  background-color: #2ea043;
 }
 
 /* Bus List Table */
@@ -249,7 +252,7 @@ export default {
   width: 90%;
   max-width: 900px;
   margin-top: 30px;
-  background-color: #2e2e2e;
+  background-color: #161b22;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -263,29 +266,29 @@ table {
 
 table th, table td {
   padding: 15px;
-  border: 1px solid #444;
+  border: 1px solid #21262d;
   text-align: center;
   font-size: 1rem;
+  color: #c9d1d9;
 }
 
 table th {
-  background-color: #444;
-  color: #f1f1f1;
+  background-color: #21262d;
   font-size: 1.1rem;
 }
 
 table tr:nth-child(even) {
-  background-color: #333;
+  background-color: #161b22;
 }
 
 table tr:hover {
-  background-color: #444;
+  background-color: #2d333b;
 }
 
 button {
-  background-color: #444;
-  color: #f1f1f1;
-  border: 1px solid #555;
+  background-color: #30363d;
+  color: #c9d1d9;
+  border: 1px solid #444c56;
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 6px;
@@ -294,7 +297,7 @@ button {
 }
 
 button:hover {
-  background-color: #666;
+  background-color: #3f4955;
 }
 
 /* Overlay for Add Bus Form */
@@ -304,7 +307,7 @@ button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(13, 17, 23, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -312,8 +315,8 @@ button:hover {
 }
 
 .form-container {
-  background-color: #2e2e2e;
-  color: #f1f1f1;
+  background-color: #161b22;
+  color: #c9d1d9;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
@@ -340,20 +343,20 @@ input, select {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #444;
-  color: #f1f1f1;
-  background-color: #333;
+  border: none;
+  color: #c9d1d9;
+  background-color: #21262d;
   font-size: 1rem;
 }
 
 input:focus, select:focus {
   outline: none;
-  border-color: #4caf50;
+  border-color: #238636;
 }
 
 button[type="submit"] {
   width: 100%;
-  background-color: #4caf50;
+  background-color: #238636;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -363,7 +366,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #2ea043;
 }
 
 /* Responsive Design */
@@ -383,4 +386,5 @@ button[type="submit"]:hover {
     width: 95%;
   }
 }
+
 </style>

@@ -1,8 +1,7 @@
 <template>
   <div id="main">
+    <div class="top-sec">
     <h1>Depot Management</h1>
-
-    <!-- Search and Filter Section -->
     <div class="filter-container">
       <input 
         type="text" 
@@ -26,6 +25,7 @@
         title="Add New Depot"
       >+</button>
     </div>
+  </div>
 
     <!-- Depot Cards -->
     <div class="depot-container">
@@ -166,7 +166,6 @@ export default {
   #main {
     font-family: 'Arial', sans-serif;
     background-color: #333;
-    padding: 20px;
     min-height: 100vh;
     min-width: 100vw;
     display: flex;
@@ -179,6 +178,7 @@ export default {
     color: #ffffff;
     font-size: 2.5rem;
     margin-bottom: 20px;
+    margin-left: 10px;
   }
   
   /* Search and Filter Section */
@@ -202,6 +202,10 @@ export default {
     font-size: 1rem;
     border-radius: 5px;
     border: 1px solid #444;
+  }
+  .top-sec{
+    background: #000000;
+    width: 100vw;
   }
   
   /* Depot Container */
