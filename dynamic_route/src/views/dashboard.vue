@@ -13,6 +13,7 @@
             <li @click="$router.push('/routes')">
           <i class="fas fa-route"></i> Routes
         </li>
+          <li @click="$router.push('')"></li>
        
           </ul>
         </nav>

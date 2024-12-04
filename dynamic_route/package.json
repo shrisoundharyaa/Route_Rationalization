@@ -20,6 +20,7 @@
     "leaflet": "^1.9.4",
     "mongoose": "^8.8.3",
     "protobufjs": "^7.4.0",
+    "uuid": "^11.0.3",
     "vue": "^3.5.12",
     "vue-chartjs": "^4.1.1",
     "vue-router": "^4.4.5",
