@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <nav class="sidenav">
-      <div class="back-arrow" @click="$router.push('/')">
+      <div class="back-arrow" @click="$router.push('/newdashboard')">
         <i class="fa fa-arrow-left"></i>
       </div>
 

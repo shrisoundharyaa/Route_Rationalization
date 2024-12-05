@@ -26,7 +26,7 @@
   
       <div class="middle-section" v-else>
         <!-- Updated congestion and accident levels -->
-        <div class="back-arrow" @click="$router.push('/')">
+        <div class="back-arrow" @click="$router.push('/newdashboard')">
         <i class="fa fa-arrow-left"></i>
          </div>
         <ul class="status-list">
