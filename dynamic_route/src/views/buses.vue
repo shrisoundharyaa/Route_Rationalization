@@ -17,31 +17,37 @@
     <div class="content">
       <div v-if="selectedSection === 'identifyBus'">
         <h2>Identify Bus</h2>
-        <form @submit.prevent="submitBusId">
-          <label for="busId">Enter Bus ID : </label>
-          <input type="text" id="busId" v-model="busId" required class="styled-input" />
-          <button type="submit" class="styled-button">Submit</button>
+        <form @submit.prevent="filterBuses">
+          <label for="busId">Search by Bus ID : </label>
+          <input type="text" id="busId" v-model="busId" class="styled-input" />
+          <button type="submit" class="styled-button">Search</button>
         </form>
         <!-- Display the data in a table -->
-        <table v-if="vehicleData.length > 0" class="data-table">
+        <table v-if="filteredBuses.length > 0" class="data-table">
           <thead>
             <tr>
               <th>Bus ID</th>
-              <th>Trip ID</th>
-              <th>Latitude</th>
-              <th>Longitude</th>
+              <th>Registration Number</th>
+              <th>Route ID</th>
+              <th>Status</th>
+              <th>Capacity</th>
+              <th>Delay Time</th>
+              <th>Current Driver ID</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="vehicle in vehicleData" :key="vehicle.vehicle_id">
-              <td>{{ vehicle.vehicle_id }}</td>
-              <td>{{ vehicle.trip_id }}</td>
-              <td>{{ vehicle.latitude }}</td>
-              <td>{{ vehicle.longitude }}</td>
+            <tr v-for="bus in filteredBuses" :key="bus.busId">
+              <td>{{ bus.busId }}</td>
+              <td>{{ bus.registrationNumber }}</td>
+              <td>{{ bus.routeId }}</td>
+              <td>{{ bus.status }}</td>
+              <td>{{ bus.capacity }}</td>
+              <td>{{ bus.delayTime }} min</td>
+              <td>{{ bus.currentDriverId || 'N/A' }}</td>
             </tr>
           </tbody>
         </table>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p v-if="filteredBuses.length === 0" class="error">No buses found.</p>
       </div>
 
       <div v-if="selectedSection === 'busBunching'">
@@ -54,44 +60,43 @@
 
 <script>
 export default {
-  name: 'BusManagement',
+  name: "BusManagement",
   data() {
     return {
-      selectedSection: 'identifyBus',
-      busId: '',
-      vehicleData: [], // Array to hold the vehicle data
-      errorMessage: null, // To store error messages
+      selectedSection: "identifyBus",
+      busId: "", // For searching
+      allBuses: [], // Holds all bus data fetched from the API
+      filteredBuses: [], // Holds filtered data based on search
     };
   },
   methods: {
     selectSection(section) {
       this.selectedSection = section;
     },
-    async submitBusId() {
+    async fetchAllBuses() {
       try {
-        const response = await fetch(
-          `http://127.0.0.1:5000/api/vehicle-positions?vehicle_id=${this.busId}`
-        );
+        const response = await fetch("http://127.0.0.1:5000/api/getAllBuses");
         const data = await response.json();
 
         if (response.ok) {
-          if (data.length > 0) {
-            this.vehicleData = data; // Populate the table with data
-            this.errorMessage = null; // Clear any error messages
-          } else {
-            this.vehicleData = [];
-            this.errorMessage = 'No matching bus found.';
-          }
+          this.allBuses = data; // Store all buses
+          this.filteredBuses = data; // Initially show all buses
         } else {
-          this.vehicleData = [];
-          this.errorMessage = data.error || 'Error fetching vehicle data.';
+          console.error("Error fetching bus data:", data.error || "Unknown error");
         }
       } catch (error) {
-        console.error('Error fetching vehicle location:', error);
-        this.vehicleData = [];
-        this.errorMessage = 'Unable to connect to the server.';
+        console.error("Error connecting to the server:", error);
       }
     },
+    filterBuses() {
+      const query = this.busId.toLowerCase();
+      this.filteredBuses = this.allBuses.filter((bus) =>
+        bus.busId.toLowerCase().includes(query)
+      );
+    },
+  },
+  mounted() {
+    this.fetchAllBuses(); // Fetch data when the component is mounted
   },
 };
 </script>
@@ -200,10 +205,6 @@ table.data-table th {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
-/* .styled-button:hover {
-  background-color: #891192;
-} */
 
 .error {
   color: red;

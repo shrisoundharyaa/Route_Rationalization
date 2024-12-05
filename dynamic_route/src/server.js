@@ -94,7 +94,15 @@
       res.status(500).json({ error: 'Server error' });
     }
   });
-  
+  app.get('/api/getAllBuses', async (req, res) => {
+    try {
+     const buses =await Bus.find();
+     res.status(200).json(buses);
+    } catch (error) {
+      console.error('Error fetching bus details:', error);
+      res.status(500).json({ error: 'An error occurred while fetching bus details.' });
+    }
+  });
   
 
 

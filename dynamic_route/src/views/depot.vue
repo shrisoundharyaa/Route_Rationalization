@@ -1,31 +1,27 @@
 <template>
   <div id="main">
     <div class="top-sec">
-    <h1>Depot Management</h1>
-    <div class="filter-container">
-      <input 
-        type="text" 
-        v-model="searchQuery" 
-        placeholder="Search by depot name..." 
-        @input="filterDepots"
-        class="search-input"
-      />
-      <select v-model="busFilter" @change="filterDepots" class="filter-select">
-        <option value="">Filter by Number of Buses</option>
-        <option value="1">1 Bus</option>
-        <option value="5">5 Buses</option>
-        <option value="10">10 Buses</option>
-        <option value="20">20+ Buses</option>
-      </select>
-
-      <!-- Add New Depot Icon -->
-      <button
-        class="add-depot-button"
-        @click="handleAddDepotClick"
-        title="Add New Depot"
-      >+</button>
+      <h1>Depot Management</h1>
+      <div class="stats-container">
+        <p>Total Depots: <strong>{{ totalDepots }}</strong></p>
+        <p>Total Capacity: <strong>{{ totalCapacity }}</strong></p>
+      </div>
+      <div class="filter-container">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          placeholder="Search by depot name..." 
+          @input="filterDepots"
+          class="search-input"
+        />
+        <!-- Add New Depot Icon -->
+        <button
+          class="add-depot-button"
+          @click="handleAddDepotClick"
+          title="Add New Depot"
+        >+</button>
+      </div>
     </div>
-  </div>
 
     <!-- Depot Cards -->
     <div class="depot-container">
@@ -37,7 +33,6 @@
       >
         <h2>{{ depot.name }}</h2>
         <p>Total Capacity: {{ depot.capacity }}</p>
-       
       </div>
     </div>
 
@@ -52,7 +47,6 @@
             placeholder="Depot Name" 
             required 
           />
-          
           <input 
             type="number" 
             v-model="newDepot.capacity" 
@@ -67,6 +61,7 @@
   </div>
 </template>
 
+
   
 <script>
 import axios from 'axios';
@@ -78,7 +73,7 @@ export default {
       depots: [],  // Original list of depots
       filteredDepots: [],  // Depots after applying search/filter
       searchQuery: '',  // Search query for depot name
-      busFilter: '',  // Filter for number of buses
+      
       showOverlay: false,  // Flag to control overlay visibility
       newDepot: {
         name: '',
@@ -86,16 +81,25 @@ export default {
       }, // Data for new depot
     };
   },
+  computed: {
+    // Total number of depots
+    totalDepots() {
+      return this.filteredDepots.length;
+    },
+    // Total capacity of all depots
+    totalCapacity() {
+      return this.filteredDepots.reduce((sum, depot) => sum + parseInt(depot.capacity, 10), 0);
+    }
+  },
   methods: {
     handleAddDepotClick() {
-      console.log('Add icon clicked');
       this.showOverlay = true;
     },
     async fetchDepots() {
       try {
         const response = await axios.get('http://localhost:5000/depots');
-        console.log('Depots fetched:', response.data);
         this.depots = response.data;
+        this.depots.sort((a, b) => a.name.localeCompare(b.name));
         this.filteredDepots = this.depots; // Initially, display all depots
         this.filterDepots(); // Apply filtering immediately after loading data
       } catch (error) {
@@ -103,30 +107,14 @@ export default {
       }
     },
 
-    // Filter depots based on search and bus count
+    // Filter depots based on search query
     filterDepots() {
       let filtered = this.depots;
-
-      // Filter by depot name (case insensitive search)
       if (this.searchQuery) {
         filtered = filtered.filter(depot => 
           depot.name.toLowerCase().includes(this.searchQuery.toLowerCase())
         );
       }
-
-      // Filter by number of buses
-      if (this.busFilter) {
-        filtered = filtered.filter(depot => {
-          const busCount = depot.buses.length;
-          if (this.busFilter === '1') return busCount === 1;
-          if (this.busFilter === '5') return busCount <= 5;
-          if (this.busFilter === '10') return busCount >= 10;
-          if (this.busFilter === '20') return busCount >= 20;
-          return true;
-        });
-      }
-
-      // Set the filtered depots
       this.filteredDepots = filtered;
     },
 
@@ -151,7 +139,7 @@ export default {
     // Method to close the overlay
     closeOverlay() {
       this.showOverlay = false;
-      this.newDepot = { name: '', location: '', capacity: '' };  // Reset form fields
+      this.newDepot = { name: '', capacity: '' };  // Reset form fields
     },
   },
   created() {
@@ -162,137 +150,147 @@ export default {
 
   
   <style scoped>
-  /* General Styles */
-  #main {
-    font-family: 'Arial', sans-serif;
-    background-color: #333;
-    min-height: 100vh;
-    min-width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* Title */
-  h1 {
-    color: #ffffff;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    margin-left: 10px;
-  }
-  
-  /* Search and Filter Section */
-  .filter-container {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 20px;
-  }
-  
-  .search-input {
-    padding: 10px;
-    font-size: 1rem;
-    width: 250px;
-    border-radius: 5px;
-    border: 1px solid #444;
-  }
-  
-  .filter-select {
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #444;
-  }
-  .top-sec{
-    background: #000000;
-    width: 100vw;
-  }
-  
-  /* Depot Container */
-  .depot-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 20px;
-    padding: 0 20px;
-  }
-  
-  /* Depot Card Styles */
-  .depot-card {
-    background-color: #000000;
-    color: #f1f1f1;
-    border: 1px solid #444;
-    padding: 1.5rem;
-    width: 250px;
-    cursor: pointer;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    font-size: 1rem;
-    text-transform: capitalize;
-  }
-  .add-depot-button {
-  background-color: #4CAF50;
-  color: white;
-  font-size: 1rem;
+ /* General Styles */
+#main {
+  font-family: 'Arial', sans-serif;
+  background: #000; /* Pure black background */
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  color: #fff; /* White text */
+}
+
+/* Title */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #fff; /* Pure white title */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.2); /* Soft glow effect */
+}
+
+/* Stats Section */
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+}
+
+.stats-container p {
+  margin: 0;
+}
+
+.stats-container strong {
+  color: #fff; /* White for contrast */
+}
+
+/* Filter Section */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.search-input {
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 1.1rem;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 25px;
+  border: none;
+  background: #333; 
+  color: #fff; 
+  outline: none;
+}
+
+.search-input:focus {
+  background-color: #444;
+}
+
+.add-depot-button {
+  background-color: #444; /* Dark gray */
+  color: white;
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-top: 10px;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-depot-button:hover {
-  background-color: #45a049;
+  transform: scale(1.1);
 }
-  
-  .depot-card:hover {
-    background-color: #444;
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-  }
-  
-  .depot-card h2 {
-    font-size: 1.6rem;
-    color: #ffd700;
-    margin-bottom: 10px;
-  }
-  
-  .depot-card p {
-    color: #ddd;
-    margin: 5px 0;
-  }
-  
-  /* Card Details */
-  .depot-card p:first-child {
-    font-weight: bold;
-  }
-  
-  .depot-card p:last-child {
-    font-size: 1.1rem;
-    color: #88c;
-  }
-  .close-button {
-  background-color: #ff5c5c;
-  color: white;
-  font-size: 1rem;
+
+/* Depot Container */
+.depot-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+/* Depot Card */
+.depot-card {
+  background: #111; /* Very dark gray */
+  color: #fff; /* White text */
+  border: 1px solid #333; /* Subtle border */
+  padding: 20px;
+  width: 300px;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  margin-top: 10px;
+  text-align: center;
+  border-radius: 10px;
+  
+  overflow: hidden;
+  position: relative;
 }
-.close-button:hover {
-  background-color: #ff2e2e;
+
+.depot-card:hover {
+  transform: translateY(-10px);
+  background: #222; /* Slightly lighter gray */
 }
-  .overlay {
+
+.depot-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #fff; /* White for titles */
+}
+
+.depot-card p {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  color: #ccc; /* Light gray for descriptions */
+}
+
+/* Overlay */
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9); /* Black with slight transparency */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -300,35 +298,74 @@ export default {
 }
 
 .overlay-content {
-  background-color: #fff;
+  background: #222; /* Very dark gray */
+  color: #fff; /* White text */
   padding: 30px;
-  border-radius: 8px;
-  width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.overlay-content h2 {
+  margin-bottom: 20px;
+  color: #fff;
 }
 
 .overlay-content input,
 .overlay-content button {
+  margin-bottom: 10px;
   padding: 10px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   width: 100%;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 1px solid #444;
+  background: #333; /* Dark gray */
+  color: #fff;
 }
 
-  /* Mobile responsiveness */
-  @media (max-width: 600px) {
-    .depot-card {
-      width: 100%;
-      padding: 1rem;
-    }
-  
-    .search-input, .filter-select {
-      width: 100%;
-      padding: 8px;
-    }
+.overlay-content button {
+  background-color: #444;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.overlay-content button:hover {
+  background-color: #555;
+}
+
+/* Close Button */
+.close-button {
+  background-color: #444;
+  color: white;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.close-button:hover {
+  background-color: #555;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .depot-card {
+    width: 100%;
+    margin: 0;
   }
-  </style>
+
+  .stats-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filter-container {
+    flex-direction: column;
+  }
+}
+
+</style>
   
