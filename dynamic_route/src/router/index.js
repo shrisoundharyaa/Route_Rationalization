@@ -8,6 +8,7 @@ import Depot from "../views/depot.vue"
 import DepotDetail from "../views/depotDetail.vue"
 import NewDashboard from "../views/NewDashboard.vue"
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
