@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Input Section -->
-       <div class="back-arrow" @click="$router.push('/')">
+       <div class="back-arrow" @click="$router.push('/newdashboard')">
         <i class="fa fa-arrow-left"></i>
       </div>
       <div class="input-section">
