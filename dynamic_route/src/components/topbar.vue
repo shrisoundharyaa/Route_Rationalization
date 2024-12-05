@@ -14,10 +14,10 @@
   .topbar {
     position: fixed;
     top: 0;
-    left: 0;
+    left: 30px;
     width: 100%;
     height: 60px;
-    background-color: #333;
+    background-color: #222;
     color: white;
     display: flex;
     align-items: center;
@@ -31,4 +31,3 @@
     font-weight: bold;
   }
   </style>
-  
