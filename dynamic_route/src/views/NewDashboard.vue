@@ -1,7 +1,10 @@
 <template>
     <div class="dashboard">
+      <topbar />
+     <floaingbar />
       <!-- Header Section -->
       <header class="header">
+        
         <!-- <h1>Real-Time Traffic Information Dashboard</h1> -->
       </header>
   
@@ -11,8 +14,8 @@
         <div class="card card-info">
           <p><strong>5,067</strong> <span class="icon">🚍</span></p>
           <p><strong>2,066</strong> <span class="icon">🚖</span></p>
-          <p><strong>Last Updated Time:</strong><br>Taxi: 29/12/2021, 14:44:37</p>
-          <p><strong>Estimated Travel Time:</strong><br>29/12/2021, 14:44:25</p>
+          <!-- <p><strong>Last Updated Time:</strong><br>Taxi: 29/12/2021, 14:44:37</p>
+          <p><strong>Estimated Travel Time:</strong><br>29/12/2021, 14:44:25</p> -->
         </div>
   
         <!-- Map Section -->
@@ -72,9 +75,16 @@
   <script>
   import { Chart, registerables } from "chart.js";
   Chart.register(...registerables);
+  // import Baselayout from "../components/Baselayout.vue"
+  import floaingbar from "@/components/floaingbar.vue";
+  import topbar from "@/components/topbar.vue";
   
   export default {
     name: "TrafficDashboard",
+    components: {
+    topbar,
+    floaingbar,
+  },
     data() {
       return {
         map: null,
