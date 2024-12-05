@@ -1,162 +1,170 @@
 <template>
-    <div class="dashboard">
-      <topbar />
-     <floaingbar />
-      <!-- Header Section -->
-      <header class="header">
-        
-        <!-- <h1>Real-Time Traffic Information Dashboard</h1> -->
-      </header>
-  
-      <!-- Main Grid Layout -->
-      <div class="grid-container">
-        <!-- Left Information Card -->
-        <div class="card card-info">
-   <div class="info-container">
-    <div class="info-block">
-      <p class="value"><strong>5,067</strong></p>
-      <p class="icon">🚍</p>
-     </div>
-   
-      </div>
-  
-</div>
+  <div class="dashboard">
+    <topbar />
+    <floaingbar />
+    <!-- Header Section -->
+    <header class="header"></header>
 
-        <!-- Map Section -->
-        <div class="card map-area">
-          <div id="map" ref="map"></div>
-        </div>
-  
-        <!-- Right Traffic Incidents Section -->
-        <div class="card card-incidents">
-          <h3>Traffic Incidents</h3>
-          <ul>
-            <li><strong>Accident:</strong> 29/12/2021, 17:03 at Upper Serangoon Rd</li>
-            <li><strong>Heavy Traffic:</strong> CTE (towards SLE)</li>
-            <li><strong>Roadwork:</strong> Marine Parade Rd</li>
-          </ul>
-        </div>
-  
-        <!-- Bottom Graphs -->
-        <div class="card card-graph">
-          <h3>Weekday Passenger Volume</h3>
-          <canvas id="weekdayChart" width="400" height="250"></canvas>
-        </div>
-        <div class="card card-graph">
-          <h3>Weekend/Holiday Passenger Volume</h3>
-          <canvas id="weekendChart" width="400" height="250"></canvas>
+    <!-- Main Grid Layout -->
+    <div class="grid-container">
+      <!-- Left Information Card -->
+      <div class="card card-info">
+        <div class="info-container">
+          <div class="info-block">
+            <p class="value"><strong>5,067</strong></p>
+            <p class="icon">🚍</p>
+          </div>
         </div>
       </div>
-  
-      <!-- Additional Grid Container -->
-      <div class="grid-container extra-grid-container">
-        <!-- Additional Information Card -->
-        <div class="card card-extra-info">
-          <h3>Average Speed</h3>
-          <p><strong>City:</strong> 45 km/h</p>
-          <p><strong>Highway:</strong> 80 km/h</p>
-        </div>
-  
-        <!-- Additional Graph -->
-        <div class="card card-extra-graph">
-          <h3>Monthly Traffic Trends</h3>
-          <canvas id="monthlyTrafficChart" width="400" height="250"></canvas>
-        </div>
-  
-        <!-- Additional Notification Section -->
-        <div class="card card-extra-notifications">
-          <h3>Notifications</h3>
-          <ul>
-            <li><strong>Scheduled Maintenance:</strong> 30/12/2021, 10:00</li>
-            <li><strong>Weather Alert:</strong> Heavy rain expected tomorrow.</li>
-          </ul>
-        </div>
+
+      <!-- Map Section -->
+      <div class="card map-area">
+        <div id="map" ref="map"></div>
+      </div>
+
+      <!-- Right Traffic Incidents Section -->
+      <div class="card card-incidents">
+        <h3>Traffic Incidents</h3>
+        <ul>
+          <li><strong>Accident:</strong> 29/12/2021, 17:03 at Upper Serangoon Rd</li>
+          <li><strong>Heavy Traffic:</strong> CTE (towards SLE)</li>
+          <li><strong>Roadwork:</strong> Marine Parade Rd</li>
+        </ul>
+      </div>
+
+      <!-- Bottom Graphs -->
+      <div class="card card-graph">
+        <h3>Weekday Passenger Volume</h3>
+        <canvas id="weekdayChart" width="400" height="250"></canvas>
+      </div>
+      <div class="card card-graph">
+        <h3>Weekend/Holiday Passenger Volume</h3>
+        <canvas id="weekendChart" width="400" height="250"></canvas>
       </div>
     </div>
-  </template>
-  
-  
-  <script>
-  import { Chart, registerables } from "chart.js";
-  Chart.register(...registerables);
-  // import Baselayout from "../components/Baselayout.vue"
-  import floaingbar from "@/components/floaingbar.vue";
-  import topbar from "@/components/topbar.vue";
-  
-  export default {
-    name: "TrafficDashboard",
-    components: {
+
+    <!-- Additional Grid Container -->
+    <div class="grid-container extra-grid-container">
+      <!-- Additional Information Card -->
+      <div class="card card-extra-info">
+        <h3>Average Speed</h3>
+        <p><strong>City:</strong> 45 km/h</p>
+        <p><strong>Highway:</strong> 80 km/h</p>
+      </div>
+
+      <!-- Additional Graph -->
+      <div class="card card-extra-graph">
+        <h3>Monthly Traffic Trends</h3>
+        <canvas id="monthlyTrafficChart" width="400" height="250"></canvas>
+      </div>
+
+      <!-- Additional Notification Section -->
+      <div class="card card-extra-notifications">
+        <h3>Notifications</h3>
+        <ul>
+          <li><strong>Scheduled Maintenance:</strong> 30/12/2021, 10:00</li>
+          <li><strong>Weather Alert:</strong> Heavy rain expected tomorrow.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Chart, registerables } from "chart.js";
+Chart.register(...registerables);
+import floaingbar from "@/components/floaingbar.vue";
+import topbar from "@/components/topbar.vue";
+
+export default {
+  name: "TrafficDashboard",
+  components: {
     topbar,
     floaingbar,
   },
-    data() {
-      return {
-        map: null,
-      };
-    },
-    mounted() {
-      this.$nextTick(() => {
-        this.initMap();
-        this.renderWeekdayChart();
-        this.renderWeekendChart();
+  data() {
+    return {
+      map: null,
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.initMap();
+      this.renderWeekdayChart();
+      this.renderWeekendChart();
+      this.renderMonthlyTrafficChart(); // Add the monthly traffic chart
+    });
+  },
+  methods: {
+    initMap() {
+      this.map = new google.maps.Map(this.$refs.map, {
+        center: { lat: 28.6139, lng: 77.209 },
+        zoom: 12,
+        styles: [
+          { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
+          { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+          { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
+          { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
+          { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+          { featureType: "water", elementType: "geometry", stylers: [{ color: "#e3f2fd" }] },
+        ],
       });
     },
-    methods: {
-      initMap() {
-        this.map = new google.maps.Map(this.$refs.map, {
-          center: { lat: 28.6139, lng: 77.209 },
-          zoom: 12,
-          styles: [
-            { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
-            { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-            { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
-            { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
-            { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
-            { featureType: "water", elementType: "geometry", stylers: [{ color: "#e3f2fd" }] },
+    renderWeekdayChart() {
+      const ctx = document.getElementById("weekdayChart").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          datasets: [
+            {
+              label: "Passengers",
+              data: [1200, 1500, 1700, 1600, 2000],
+              borderColor: "#42a5f5",
+              fill: true,
+              backgroundColor: "rgba(66, 165, 245, 0.2)",
+            },
           ],
-        });
-      },
-      renderWeekdayChart() {
-        this.$nextTick(() => {
-          const ctx = document.getElementById("weekdayChart").getContext("2d");
-          new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              datasets: [
-                {
-                  label: "Passengers",
-                  data: [1200, 1500, 1700, 1600, 2000],
-                  borderColor: "#42a5f5",
-                  fill: true,
-                  backgroundColor: "rgba(66, 165, 245, 0.2)",
-                },
-              ],
-            },
-          });
-        });
-      },
-      renderWeekendChart() {
-        this.$nextTick(() => {
-          const ctx = document.getElementById("weekendChart").getContext("2d");
-          new Chart(ctx, {
-            type: "bar",
-            data: {
-              labels: ["Saturday", "Sunday", "Holiday"],
-              datasets: [
-                {
-                  label: "Passengers",
-                  data: [1800, 2200, 2500],
-                  backgroundColor: ["#ef5350", "#ffca28", "#66bb6a"],
-                },
-              ],
-            },
-          });
-        });
-      },
+        },
+      });
     },
-  };
-  </script>
+    renderWeekendChart() {
+      const ctx = document.getElementById("weekendChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Saturday", "Sunday", "Holiday"],
+          datasets: [
+            {
+              label: "Passengers",
+              data: [1800, 2200, 2500],
+              backgroundColor: ["#ef5350", "#ffca28", "#66bb6a"],
+            },
+          ],
+        },
+      });
+    },
+    renderMonthlyTrafficChart() {
+      const ctx = document.getElementById("monthlyTrafficChart").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          datasets: [
+            {
+              label: "Monthly Passengers",
+              data: [1200, 1500, 1800, 1700, 1900, 2000, 2100, 2300, 2200, 2100, 2000, 1900],
+              borderColor: "#4caf50",
+              fill: true,
+              backgroundColor: "rgba(76, 175, 80, 0.2)",
+            },
+          ],
+        },
+      });
+    },
+  },
+};
+</script>
   
   <style scoped>
   /* General Layout */
