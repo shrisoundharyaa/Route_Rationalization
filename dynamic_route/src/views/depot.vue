@@ -1,12 +1,12 @@
 <template>
   <div id="main">
-   
+    <topbar />
+      <floaingbar />
     <div class="top-sec">
-      
+     
       <h1>Depot Management</h1>
       <div class="stats-container">
-        <topbar />
-      <floaingbar />
+      
         <p>Total Depots: <strong>{{ totalDepots }}</strong></p>
         <p>Total Capacity: <strong>{{ totalCapacity }}</strong></p>
       </div>
@@ -160,97 +160,103 @@ export default {
 
   
   <style scoped>
- /* General Styles */
+/* General Styles */
 #main {
-  /* font-family: 'Arial', sans-serif; */
-  background: #f5f7fa; /* Light gray-blue background */
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #f5f7fa, #dce1e8);
   min-height: 100vh;
   min-width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  color: #2c3e50; /* Dark blue-gray text */
+  color: #2c3e50;
+  margin-top: 80px;
 }
 
 /* Title */
 h1 {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   margin-bottom: 20px;
-  color: #34495e; /* Deep blue-gray */
+  color: #34495e;
   text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-weight: 700;
+  text-align: center;
 }
 
 /* Stats Section */
 .stats-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 2rem;
-  background: #ecf0f1; /* Light gray */
-  padding: 10px 20px;
-  border-radius: 10px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
   font-size: 1.2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
 }
 
 .stats-container p {
   margin: 0;
+  font-size: 1.1rem;
 }
 
 .stats-container strong {
-  color: #2980b9; /* Bright blue for contrast */
+  color: #2980b9;
+  font-size: 1.3rem;
 }
 
 /* Filter Section */
 .filter-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 20px;
+  margin: 20px 0;
   width: 100%;
   max-width: 800px;
 }
 
 .search-input {
-  margin-top: 10px;
   padding: 12px;
   font-size: 1.1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   border-radius: 25px;
-  border: 1px solid #bdc3c7; /* Light gray border */
-  background: #fff; 
-  color: #34495e; /* Deep gray-blue text */
+  border: 1px solid #bdc3c7;
+  background: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   outline: none;
+  transition: all 0.3s ease;
 }
 
 .search-input:focus {
-  border-color: #3498db; /* Bright blue focus */
-  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Light blue glow */
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
 }
 
 .add-depot-button {
-  background-color: #3498db; /* Bright blue */
+  background: linear-gradient(to right, #3498db, #2980b9);
   color: white;
-  font-size: 1.5rem;
-  width: 50px;
-  height: 50px;
+  font-size: 1.8rem;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
-  margin-top: 10px;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-depot-button:hover {
-  transform: scale(1.1);
-  background-color: #2980b9; /* Darker blue on hover */
+  transform: scale(1.2);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Depot Container */
@@ -259,40 +265,37 @@ h1 {
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
-  margin-top: 20px;
-  padding: 0 10px;
+  padding: 10px;
 }
 
 /* Depot Card */
 .depot-card {
-  background: #ffffff; /* White background */
-  color: #34495e; /* Deep blue-gray text */
-  border: 1px solid #dcdde1; /* Subtle border */
+  background: linear-gradient(to top right, #ffffff, #f8f9fa);
+  color: #34495e;
+  border: none;
   padding: 20px;
   width: 300px;
   cursor: pointer;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .depot-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .depot-card h2 {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #2980b9; /* Bright blue */
+  color: #2980b9;
 }
 
 .depot-card p {
-  font-size: 1.2rem;
-  margin: 5px 0;
-  color: #7f8c8d; /* Muted gray */
+  font-size: 1rem;
+  color: #7f8c8d;
 }
 
 /* Overlay */
@@ -302,7 +305,7 @@ h1 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(44, 62, 80, 0.9); /* Semi-transparent deep blue */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -310,66 +313,60 @@ h1 {
 }
 
 .overlay-content {
-  background: #ecf0f1; /* Light gray */
-  color: #2c3e50; /* Dark blue-gray */
+  background: #ffffff;
+  color: #2c3e50;
   padding: 30px;
   border-radius: 15px;
   width: 90%;
   max-width: 400px;
   text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .overlay-content h2 {
   margin-bottom: 20px;
-  color: #2980b9; /* Bright blue */
+  color: #2980b9;
 }
 
 .overlay-content input,
 .overlay-content button {
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 12px;
   font-size: 1.1rem;
   width: 100%;
   border-radius: 8px;
-  border: 1px solid #bdc3c7; /* Subtle border */
-  background: #ffffff; /* White background */
-  color: #2c3e50; /* Dark blue-gray text */
+  border: 1px solid #bdc3c7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .overlay-content button {
-  background-color: #3498db; /* Bright blue */
+  background: linear-gradient(to right, #3498db, #2980b9);
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .overlay-content button:hover {
-  background-color: #2980b9; /* Darker blue on hover */
+  background: #21618c;
 }
 
 /* Close Button */
 .close-button {
-  background-color: #e74c3c; /* Bright red */
+  background: #e74c3c;
   color: white;
   font-size: 1rem;
   padding: 10px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .close-button:hover {
-  background-color: #c0392b; /* Darker red on hover */
+  background: #c0392b;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .depot-card {
-    width: 100%;
-    margin: 0;
-  }
-
   .stats-container {
     flex-direction: column;
     gap: 1rem;
@@ -377,8 +374,14 @@ h1 {
 
   .filter-container {
     flex-direction: column;
+    gap: 10px;
+  }
+
+  .depot-card {
+    width: 100%;
   }
 }
+
 
 
 </style>

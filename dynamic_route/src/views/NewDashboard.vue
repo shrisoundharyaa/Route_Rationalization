@@ -178,8 +178,8 @@ export default {
 
 
 .dashboard {
-  background-color: #e1e2e7; /* Light theme background */
-  color: #18181b; /* Main text color */
+  background-color: #e8e8e8; 
+  color: #18181b; 
   padding: 20px;
   width: 100vw;
   height: 100vh;

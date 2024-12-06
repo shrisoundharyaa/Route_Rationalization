@@ -113,118 +113,115 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+/* General Styling */
 .main {
   display: flex;
-  height: 100vh;
-  background-color: rgb(39, 39, 39);
-}
-
-.sidenav {
-  height: 100vh;
-  width: 250px;
-  background-color: black;
-  color: white;
-  padding-top: 20px;
-  position: fixed;
-  display: flex;
   flex-direction: column;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.319);
-  transition: width 0.3s ease;
-}
-
-.back-arrow {
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 20px;
-  padding-left: 10px;
-}
-
-.sidenav ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidenav li {
-  font-weight: 600;
-  font-size: 17px;
-  padding: 15px;
-  cursor: pointer;
-}
-
-.sidenav li:hover {
-  background-color: #acacac;
-  border-radius: 10px;
-}
-
-.sidenav li i {
-  margin-right: 10px;
+  height: 100vh;
+  background: linear-gradient(135deg, #ece9e6, #ffffff);
+  /* font-family: 'Arial', sans-serif; */
+  color: #333;
+  overflow: hidden;
+  width: 100vw;
 }
 
 .content {
-  margin-left: 270px;
   padding: 20px;
-  width: 1266px;
-  background-color: rgb(39, 39, 39);
-  color: white;
+  flex: 1;
+  overflow-y: auto;
+  margin-left: 60px;
+  margin-top:80px;
 }
 
+/* Table Styling */
 table.data-table {
   margin-top: 20px;
   width: 100%;
   border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 table.data-table th,
 table.data-table td {
-  border: 1px solid white;
+  border: 1px solid rgba(128, 128, 128, 0.233);
   text-align: left;
-  padding: 8px;
+  padding: 12px 15px;
+  font-size: 14px;
 }
 
 table.data-table th {
-  background-color: #333;
+  background-color: #0d6efd;
   color: white;
+  font-weight: bold;
 }
 
+table.data-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table.data-table tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+/* Input Styling */
 .styled-input {
   padding: 10px;
   margin-right: 10px;
-  border-radius: 5px;
-  border: 1px solid white;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  width: 250px;
+  border-radius: 25px;
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+  color: #333;
+  width: 300px;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .styled-input:focus {
   outline: none;
-  border-color: #00bcd4;
-  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #0d6efd;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
 }
 
+/* Button Styling */
 .styled-button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 5px;
-  background-color: #df751f;
+  border-radius: 25px;
+  background-color: #0d6efd;
   color: white;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* .styled-button:hover {
-  background-color: #891192;
-} */
+.styled-button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
 
+/* Error Message */
 .error {
   color: red;
   margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Section Header */
+h2 {
+  font-size: 24px;
+  color: #0d6efd;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 </style>
