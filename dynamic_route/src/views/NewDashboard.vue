@@ -1,18 +1,18 @@
 <template>
   <div class="dashboard">
-    <topbar />
-    <floaingbar />
+   
     <!-- Header Section -->
     <header class="header"></header>
-
+    <topbar />
+    <floaingbar />
     <!-- Main Grid Layout -->
     <div class="grid-container">
       <!-- Left Information Card -->
       <div class="card card-info">
         <div class="info-container">
           <div class="info-block">
-            <p class="value"><strong>5,067</strong></p>
-            <p class="icon">🚍</p>
+            <p class="value"><strong>5,067 🚍</strong></p>
+            <!-- <p class="icon"></p> -->
           </div>
         </div>
       </div>
@@ -170,50 +170,57 @@ export default {
 </script>
   
   <style scoped>
-  /* General Layout */
-  body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .dashboard {
-    background-color: #2c2c2c;
-    color: white;
-    padding: 20px;
-    width: 100vw;
-    height: 100vh;
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /* Disable horizontal scrolling */
-    box-sizing: border-box; /* Ensure padding doesn't exceed the width/height */
-    -ms-overflow-style: none;
-  }
-  
-  ::-webkit-scrollbar {
-    display: none; /* For Webkit browsers (Chrome, Safari, etc.) */
-  }
-  
-  /* Top Bar Space */
-  .header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Reserve Space for Sidebar and Top Bar */
-  .grid-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-gap: 10px;
-    margin-top: 60px; /* Adjust for the height of the top bar */
-    margin-left: 40px; /* Adjust for the width of the floating sidebar */
-    padding: 10px;
-  }
-  
-  .card {
-    background-color: #333;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  .info-container {
+ body {
+  font-family: Arial, sans-serif;
+  color: #18181b; /* Main text color */
+  background-color: #ecedf1; /* Light theme background color */
+}
+
+
+.dashboard {
+  background-color: #e1e2e7; /* Light theme background */
+  color: #18181b; /* Main text color */
+  padding: 20px;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
+
+/* Top Bar Space */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #353f80; /* Secondary text color */
+}
+
+/* Grid Layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-gap: 10px;
+  margin-top: 60px;
+  margin-left: 40px;
+  padding: 10px;
+}
+
+/* Cards */
+.card {
+  background-color: #ffffff; /* Card background */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; /* Shadow */
+  color: #18181b; /* Main text color */
+}
+
+/* Info Section */
+.info-container {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -227,114 +234,93 @@ export default {
   flex: 1;
   margin: 0 10px;
 }
+
 .value {
-  font-size: 3rem; /* Larger size for numbers */
-  color: #42a5f5; /* Blue for buses */
+  font-size: 3rem;
+  color: #5e0379; /* Secondary text color */
   margin: 0;
 }
+
 .icon {
   font-size: 2rem;
-  color: #42a5f5; /* Same color as the number */
+  color: #12c5d1; /* Highlighted icon color */
 }
 
-.info-block:nth-child(2) .value {
-  color: #fdd835; /* Yellow for taxis */
+/* Map Section */
+.map-area {
+  grid-column: 2 / span 1;
+  grid-row: 1 / span 2;
 }
-.info-block:nth-child(2) .icon {
-  color: #fdd835; /* Yellow for taxis */
+
+#map {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
 }
-  /* .card-info p,
-  .card-incidents ul {
-    margin: 10px 0;
+
+/* Graphs */
+canvas {
+  display: block;
+  max-width: 100%;
+  height: 250px;
+}
+
+/* Extra Grid Container */
+.extra-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+  gap: 20px;
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+.card-extra-info,
+.card-extra-graph,
+.card-extra-notifications {
+  background-color: #ffffff; /* White background for extra cards */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; /* Subtle shadow */
+}
+
+.card-extra-info {
+  color: #353f80; /* Secondary text color for highlights */
+  font-size: 16px;
+}
+
+.card-extra-graph h3 {
+  color: #353f80; /* Secondary text color for graph titles */
+  margin-bottom: 10px;
+}
+
+.card-extra-notifications h3 {
+  color: #18181b; /* Main text color for notifications */
+}
+
+.card-extra-notifications ul {
+  list-style: disc;
+  margin-left: 20px;
+  color: #18181b; /* Main text color for list items */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin-left: 0;
   }
-  
-  .card-incidents ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .card-incidents li {
-    margin-bottom: 8px;
-  } */
-  
-  /* Map Section */
+
   .map-area {
-    grid-column: 2 / span 1;
-    grid-row: 1 / span 2;
-  }
-  
-  #map {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-  }
-  
-  /* Graphs */
-  .card-graph {
     grid-column: span 1;
+    grid-row: auto;
   }
-  
-  canvas {
-    display: block;
-    max-width: 100%;
-    height: 250px;
-  }
-  
-  /* Extra Grid Container */
+
   .extra-grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-    gap: 20px; /* Space between cards */
-    margin-top: 20px; /* Spacing from the previous container */
-    margin-left: 40px; /* Same margin to align with sidebar */
+    grid-template-columns: 1fr;
+    margin-left: 0;
   }
-  
-  .card-extra-info,
-  .card-extra-graph,
-  .card-extra-notifications {
-    background-color: #444; /* Slightly lighter gray for distinction */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
-  }
-  
-  .card-extra-info {
-    color: #4caf50; /* Green for information highlights */
-    font-size: 16px;
-  }
-  
-  .card-extra-graph h3 {
-    color: #2196f3; /* Blue for graph titles */
-    margin-bottom: 10px;
-  }
-  
-  .card-extra-notifications h3 {
-    color: #ff9800; /* Orange for notifications */
-  }
-  
-  .card-extra-notifications ul {
-    list-style: disc; /* Bullet points */
-    margin-left: 20px;
-    color: #ddd; /* Light gray for list text */
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .grid-container {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-      margin-left: 0; /* Remove sidebar margin on smaller screens */
-    }
-  
-    .map-area {
-      grid-column: span 1;
-      grid-row: auto;
-    }
-  
-    .extra-grid-container {
-      grid-template-columns: 1fr; /* Single-column layout for smaller screens */
-      margin-left: 0;
-    }
-  }
+}
+
   </style>
   

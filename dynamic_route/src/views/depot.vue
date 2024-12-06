@@ -1,5 +1,7 @@
 <template>
   <div id="main">
+    <topbar />
+    <floaingbar />
     <div class="top-sec">
       <h1>Depot Management</h1>
       <div class="stats-container">
@@ -65,9 +67,15 @@
   
 <script>
 import axios from 'axios';
+import floaingbar from "@/components/floaingbar.vue";
+import topbar from "@/components/topbar.vue";
 
 export default {
   name: 'DepotList',
+  components: {
+    topbar,
+    floaingbar,
+  },
   data() {
     return {
       depots: [],  // Original list of depots
@@ -153,24 +161,24 @@ export default {
  /* General Styles */
 #main {
   font-family: 'Arial', sans-serif;
-  background: #000; /* Pure black background */
+  background: #f5f7fa; /* Light gray-blue background */
   min-height: 100vh;
   min-width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  color: #fff; /* White text */
+  color: #2c3e50; /* Dark blue-gray text */
 }
 
 /* Title */
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #fff; /* Pure white title */
+  color: #34495e; /* Deep blue-gray */
   text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.2); /* Soft glow effect */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 /* Stats Section */
@@ -178,7 +186,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+  background: #ecf0f1; /* Light gray */
   padding: 10px 20px;
   border-radius: 10px;
   font-size: 1.2rem;
@@ -189,7 +197,7 @@ h1 {
 }
 
 .stats-container strong {
-  color: #fff; /* White for contrast */
+  color: #2980b9; /* Bright blue for contrast */
 }
 
 /* Filter Section */
@@ -210,18 +218,19 @@ h1 {
   width: 100%;
   max-width: 400px;
   border-radius: 25px;
-  border: none;
-  background: #333; 
-  color: #fff; 
+  border: 1px solid #bdc3c7; /* Light gray border */
+  background: #fff; 
+  color: #34495e; /* Deep gray-blue text */
   outline: none;
 }
 
 .search-input:focus {
-  background-color: #444;
+  border-color: #3498db; /* Bright blue focus */
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Light blue glow */
 }
 
 .add-depot-button {
-  background-color: #444; /* Dark gray */
+  background-color: #3498db; /* Bright blue */
   color: white;
   font-size: 1.5rem;
   width: 50px;
@@ -233,12 +242,13 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-depot-button:hover {
   transform: scale(1.1);
+  background-color: #2980b9; /* Darker blue on hover */
 }
 
 /* Depot Container */
@@ -253,34 +263,34 @@ h1 {
 
 /* Depot Card */
 .depot-card {
-  background: #111; /* Very dark gray */
-  color: #fff; /* White text */
-  border: 1px solid #333; /* Subtle border */
+  background: #ffffff; /* White background */
+  color: #34495e; /* Deep blue-gray text */
+  border: 1px solid #dcdde1; /* Subtle border */
   padding: 20px;
   width: 300px;
   cursor: pointer;
   text-align: center;
   border-radius: 10px;
-  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .depot-card:hover {
   transform: translateY(-10px);
-  background: #222; /* Slightly lighter gray */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .depot-card h2 {
   font-size: 1.8rem;
   margin-bottom: 10px;
-  color: #fff; /* White for titles */
+  color: #2980b9; /* Bright blue */
 }
 
 .depot-card p {
   font-size: 1.2rem;
   margin: 5px 0;
-  color: #ccc; /* Light gray for descriptions */
+  color: #7f8c8d; /* Muted gray */
 }
 
 /* Overlay */
@@ -290,7 +300,7 @@ h1 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.9); /* Black with slight transparency */
+  background: rgba(44, 62, 80, 0.9); /* Semi-transparent deep blue */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -298,8 +308,8 @@ h1 {
 }
 
 .overlay-content {
-  background: #222; /* Very dark gray */
-  color: #fff; /* White text */
+  background: #ecf0f1; /* Light gray */
+  color: #2c3e50; /* Dark blue-gray */
   padding: 30px;
   border-radius: 15px;
   width: 90%;
@@ -309,7 +319,7 @@ h1 {
 
 .overlay-content h2 {
   margin-bottom: 20px;
-  color: #fff;
+  color: #2980b9; /* Bright blue */
 }
 
 .overlay-content input,
@@ -319,24 +329,25 @@ h1 {
   font-size: 1.1rem;
   width: 100%;
   border-radius: 8px;
-  border: 1px solid #444;
-  background: #333; /* Dark gray */
-  color: #fff;
+  border: 1px solid #bdc3c7; /* Subtle border */
+  background: #ffffff; /* White background */
+  color: #2c3e50; /* Dark blue-gray text */
 }
 
 .overlay-content button {
-  background-color: #444;
+  background-color: #3498db; /* Bright blue */
+  color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .overlay-content button:hover {
-  background-color: #555;
+  background-color: #2980b9; /* Darker blue on hover */
 }
 
 /* Close Button */
 .close-button {
-  background-color: #444;
+  background-color: #e74c3c; /* Bright red */
   color: white;
   font-size: 1rem;
   padding: 10px;
@@ -347,7 +358,7 @@ h1 {
 }
 
 .close-button:hover {
-  background-color: #555;
+  background-color: #c0392b; /* Darker red on hover */
 }
 
 /* Mobile Responsiveness */
@@ -366,6 +377,7 @@ h1 {
     flex-direction: column;
   }
 }
+
 
 </style>
   
