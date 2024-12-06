@@ -1,10 +1,12 @@
 <template>
   <div id="main">
-    <topbar />
-    <floaingbar />
+   
     <div class="top-sec">
+      
       <h1>Depot Management</h1>
       <div class="stats-container">
+        <topbar />
+      <floaingbar />
         <p>Total Depots: <strong>{{ totalDepots }}</strong></p>
         <p>Total Capacity: <strong>{{ totalCapacity }}</strong></p>
       </div>
@@ -160,7 +162,7 @@ export default {
   <style scoped>
  /* General Styles */
 #main {
-  font-family: 'Arial', sans-serif;
+  /* font-family: 'Arial', sans-serif; */
   background: #f5f7fa; /* Light gray-blue background */
   min-height: 100vh;
   min-width: 100vw;

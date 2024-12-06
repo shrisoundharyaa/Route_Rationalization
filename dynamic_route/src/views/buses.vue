@@ -1,11 +1,13 @@
 <template>
   <div class="main">
-    <nav class="sidenav">
-      <div class="back-arrow" @click="$router.push('/')">
+    <topbar />
+    <floaingbar />
+    
+      <!-- <div class="back-arrow" @click="$router.push('/')">
         <i class="fa fa-arrow-left"></i>
-      </div>
+      </div> -->
 
-      <ul>
+      <!-- <ul>
         <li @click="selectSection('identifyBus')">
           <i class="fa fa-bus" aria-hidden="true"></i> Identify Bus
         </li>
@@ -15,8 +17,8 @@
         <li @click="selectSection('allBuses')">
           <i class="fa fa-list" aria-hidden="true"></i> All Buses
         </li>
-      </ul>
-    </nav>
+      </ul> -->
+  
     <div class="content">
       <!-- All Buses Section -->
       <div v-if="selectedSection === 'allBuses'">
@@ -55,8 +57,14 @@
 
 
 <script>
+import floaingbar from "@/components/floaingbar.vue";
+import topbar from "@/components/topbar.vue";
 export default {
   name: 'BusManagement',
+  components: {
+    topbar,
+    floaingbar,
+  },
   data() {
     return {
       selectedSection: 'allBuses', // Default section

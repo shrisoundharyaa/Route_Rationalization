@@ -54,20 +54,20 @@ export default {
 /* Sidebar Container */
 .sidebar {
   position: fixed;
-  top: 60px; /* Below the top bar */
+  top: 60px;
   left: 0px;
-  width: 50px; /* Default width for icons only */
+  width: 50px;
   height: 100%;
-  background-color: #ecedf1; /* Light theme background color */
-  color: #18181b; /* Main text color */
-  overflow: hidden; /* Prevent overflow issues */
-  transition: width 0.3s ease; /* Smooth expand/collapse */
+  background-color: #ecedf1;
+  color: #18181b;
+  overflow: hidden;
+  transition: width 0.3s ease;
   box-shadow: 2px 0 5px rgba(99, 99, 99, 0.2);
   z-index: 955;
 }
 
 .sidebar.open {
-  width: 120px; /* Expanded width */
+  width: 140px;
 }
 
 .sidebar ul {
@@ -78,38 +78,52 @@ export default {
 
 .sidebar ul li {
   display: flex;
-  align-items: center; /* Align icons and text */
-  height: 40px; /* Consistent height for items */
+  align-items: center; /* Vertically align icon and text */
+  height: 40px;
   margin: 15px 0;
   cursor: pointer;
   color: #18181b;
+  padding: 0 10px;
+  border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
-  gap: 10px; /* Spacing between icon and text */
-  padding: 0 10px; /* Add padding for clickable area */
-  border-radius: 5px; /* Rounded corners */
 }
 
 .sidebar ul li:hover {
-  color: #5664c4; /* Highlight color on hover */
-  background-color: #e0e7ff; /* Light blue background for hover */
+  color: #5664c4;
+  background-color: #e0e7ff;
 }
 
 .sidebar ul li i {
-  flex-shrink: 0; /* Prevent icon resizing */
+  flex-shrink: 0;
   font-size: 20px;
-  color: #12c5d1; /* Icon color */
+  color: #12c5d1;
+  width: 30px; /* Fixed width for icon alignment */
+  text-align: center; /* Ensure icons are centered within their allocated space */
 }
 
 .sidebar ul li span {
   font-size: 16px;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap;
   opacity: 0;
-  transform: translateX(-20px); /* Slightly slide text out of view */
+  display: inline-block;
+  width: 90px; /* Fixed width for text alignment */
+  text-align: left;
+  padding-left: 5px; /* Slight left padding for readability */
+  transform: translateX(-20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .sidebar.open ul li span {
-  opacity: 1; /* Show text on expand */
-  transform: translateX(0); /* Reset position */
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebar ul li span,
+.sidebar ul li i {
+  line-height: 40px; /* Ensure consistent height alignment */
+}
+
+.sidebar ul li span {
+  margin-left: 10px; /* Space between icon and text */
 }
 </style>
