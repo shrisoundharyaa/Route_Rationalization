@@ -1,23 +1,68 @@
 <template>
-  <div class="main-container">
-    
-    
-      <sidenav :selected-bus="selectedBus" @closeOverlay="selectedBus = null" />
-   
-   
-    
-    <div class="right-container">
+  <div class="grid-container">
+    <!-- Left Container -->
+    <div class="left-container">
+      <div class="content">
+        <div v-if="selectedBus" class="detail-container">
+          <h3>Bus Details</h3>
+          <p><strong>Driver:</strong> {{ selectedBus.details.driverName }}</p>
+          <p><strong>Bus ID:</strong> {{ selectedBus.details.busId }}</p>
+          <p><strong>Route ID:</strong> {{ selectedBus.details.routeId }}</p>
+        </div>
+        <div v-else>
+          <p>No bus selected</p>
+        </div>
+        <div v-if="selectedBus" class="detail-container">
+          <h3>Route Details</h3>
+          <p><strong>Source:</strong> {{ selectedBus.details.source }}</p>
+          <p><strong>Destination:</strong> {{ selectedBus.details.destination }}</p>
+          <p><strong>Delay:</strong> {{ selectedBus.details.delayTime }} mins</p>
+        </div>
+        <div v-else>
+          <p>No bus selected</p>
+        </div>
+
+        <!-- Stats Card -->
+        
+      </div>
+    </div>
+
+    <!-- Center Container (Map) -->
+    <div class="center-container">
       <div class="map-container">
         <div id="map" ref="map"></div>
       </div>
-      <div id="routeList"></div>
+    </div>
+
+    <!-- Right Container -->
+    <div class="right-container">
+      <div class="content">
+        
+
+        <!-- Stats Card for Top Buses -->
+        <div class="stats-card">
+          <h4>Total Buses Running</h4>
+          <p>{{ buses.length }}</p>
+          <div class="graph"></div> <!-- Placeholder for graph -->
+        </div>
+        <div class="stats-card">
+          <h4>Top Buses</h4>
+          <p>Bus 1, Bus 3, Bus 5</p>
+          <div class="graph"></div> <!-- Placeholder for graph -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
+
+
+
+
 <script>
 import sidenav from '../components/sidenav.vue';
 import busIcon from '@/assets/bus.png';
+
 
 export default {
   components: { sidenav },
@@ -34,6 +79,10 @@ export default {
   },
   mounted() {
     this.initMap();
+    const lastSelectedBus = localStorage.getItem("lastSelectedBus");
+      if (lastSelectedBus) {
+        this.selectedBus = JSON.parse(lastSelectedBus);
+      }
   },
   methods: {
     async initMap() {
@@ -170,6 +219,7 @@ export default {
             delayTime: Math.floor(Math.random() * 30) + 1,
           },
         };
+        localStorage.setItem("lastSelectedBus", JSON.stringify(this.selectedBus));
       } catch (error) {
         console.error('Geocoding error:', error);
       }
@@ -226,62 +276,168 @@ export default {
 </script>
 
 <style scoped>
-
-.main-container {
-  display: flex; 
-  height: 100vh; 
-  width: 100vw; 
+.grid-container {
+  display: grid;
+  grid-template-columns: 25% 50% 25%; /* Adjust left and right containers to each take up 25% width */
+  grid-template-rows: 100vh; /* Full height */
+  width: 100vw;
   background-color: #333;
 }
 
-.left-container {
-  width: 25%; 
-  background-color: #333; 
+.left-container,
+.right-container {
+  background-color: #444;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Align items to start for better spacing */
+  flex-direction: column; /* Stack the elements vertically */
   align-items: center;
-  padding: 32px;
+  padding: 20px;
   box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5); /* Inner shadow for depth */
+  overflow-y: auto; /* Add scrolling if content exceeds container height */
+}
+
+.left-container {
+  padding-top: 40px; /* Add space at the top */
 }
 
 .right-container {
-  width: 100%; 
-  background-color: #333; 
+  padding-top: 40px;
+  overflow-y: auto;
+}
+
+.content {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  color: white;
+  width: 100%;
+  max-width: 400px; /* Limit content width */
+}
+
+h3 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+p {
+  font-size: 1rem;
+  margin: 0;
+}
+.detail-container {
+  background-color: #555; /* Dark background for contrast */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 380px; /* Limit width */
+  color: white; /* Text color */
+  margin-top: 20px;
+}
+
+.detail-container h3 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+.detail-container p {
+  font-size: 1rem;
+  margin: 10px 0;
+  color: #bbb; /* Light text color */
+}
+
+/* Optional: Style for the "No bus selected" message */
+.detail-container p.no-selected {
+  color: #f00; /* Red color for error message */
+  text-align: center;
+}
+
+.center-container {
+  background-color: #333;
+  display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
 }
 
 .map-container {
-  width: 95%; 
-  height: 85%; 
+  width: 100%;
+  height: 85%; /* Adjust as necessary */
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 12px;
-  
 }
 
-
 #map {
-  width: 100%; /* Slight padding within the container */
-  height: 100%; /* Full height */
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
-button {
-  background-color: #2196f3;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* Stats Cards */
+.stats-card {
+  background-color: #555;
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 380px;
 }
 
-button:hover {
-  background-color: #1976d2;
+.stats-card h4 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: white;
+  text-align: center;
 }
+
+.stats-card p {
+  font-size: 1rem;
+  color: #bbb;
+  text-align: center;
+}
+
+.stats-card .graph {
+  width: 100%;
+  height: 150px; /* Placeholder height for graphs */
+  margin-top: 10px;
+  background-color: #222;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Graph Styles (Optional) */
+.graph canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 100%; /* Full width for smaller screens */
+    grid-template-rows: auto auto; /* Stack rows */
+  }
+
+  .left-container,
+  .right-container {
+    padding: 15px;
+    width: 100%;
+    overflow-y: visible; /* Disable scrollbars on smaller screens */
+  }
+
+  .content {
+    max-width: 100%; /* Allow content to take full width */
+    align-items: center;
+  }
+}
+
 </style>
