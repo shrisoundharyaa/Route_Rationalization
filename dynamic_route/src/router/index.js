@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import RealTimeMonitoring from "../views/RealTimeMonitoring.vue";
 import BusManagement from "../views/buses.vue"
 import RouteManagement from "../views/routes.vue"
-import Dashboard from "../views/dashboard.vue"
+
 import Businfo from "../views/businfo.vue"
 import Depot from "../views/depot.vue"
 import DepotDetail from "../views/depotDetail.vue"
@@ -12,11 +12,7 @@ import NewDashboard from "../views/NewDashboard.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path:'/',
-      name:'Dashboard',
-      component:Dashboard
-    },
+   
     {
       path:'/businfo',
       name:'Businfo',
@@ -49,7 +45,7 @@ const router = createRouter({
       component:RouteManagement
     },
     {
-      path:'/newdashboard',
+      path:'/',
       name:"NewDashboard",
       component:NewDashboard
     },

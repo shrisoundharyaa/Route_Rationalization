@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <div class="sidebar" :class="{ open: isHovered || isOpen }" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
       <ul>
-        <li @click.stop="$router.push('/newdashboard')">
+        <li @click.stop="$router.push('/')">
           <i class="fas fa-home"></i>
           <span v-if="isHovered || isOpen"> Home</span>
         </li>
