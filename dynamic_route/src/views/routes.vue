@@ -9,12 +9,13 @@
         <div class="input-group">
           <input type="text" id="start" v-model="start" placeholder="Enter Starting Location" />
           <input type="text" id="end" v-model="end" placeholder="Enter Destination" />
-          <button class="primary-btn" @click="calculateRoutes">Calculate Routes</button>
+          
         </div>
       </div>
 
       <!-- Controls Section -->
       <div class="controls-section">
+        <button class="primary-btn" @click="calculateRoutes">Calculate Routes</button>
         <button class="control-btn" @click="resetMap">Reset Map</button>
         
       </div>
@@ -259,11 +260,10 @@ export default {
   background-color: #fff; /* Darker sidebar background */
   color: #e0e0e0; /* Lighter text for contrast */
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
   margin-left: 60px;
   margin-top:80px;
   height: 85%;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .input-section,
@@ -271,7 +271,6 @@ export default {
 .routes-section {
   margin-bottom: 20px;
   
- 
   
 }
 .input-group {
@@ -282,20 +281,27 @@ export default {
   cursor: pointer;
   margin-bottom: 20px;
 }
-
+.input-group{
+  margin-top:20px;
+}
 .input-group input {
   width: 100%;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 9px;
   background-color: #e9e9e9; /* Darker input background */
   color: #ffffff; /* White text */
 }
-
-.input-group button {
+.controls-section{
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+}
+.primary-btn {
   width: 100%;
-  padding: 10px;
+  padding: 20px;
+  margin-bottom: 10px;
   border: none;
   background-color: #b2b6ce; /* Vibrant button color */
   color: white;
@@ -303,11 +309,6 @@ export default {
   cursor: pointer;
   
 }
-
-.input-group button:hover {
-  background-color: #e64a19; /* Slightly darker hover effect */
-}
-
 .control-btn {
   width: 100%;
   padding: 10px;
@@ -319,7 +320,9 @@ export default {
   cursor: pointer;
  
 }
-
+.primary-btn:hover{
+  background-color: #ced6e4;
+}
 .control-btn:hover {
   background-color: #ef6060; /* Darker hover effect */
 }
@@ -341,14 +344,15 @@ export default {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
 }
 .routes-section {
-  background-color: #2c2c2c; /* Slightly darker background */
+  background-color: #e2e7fa; /* Slightly darker background */
   padding: 15px;
+  color: 555555;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add some depth */
 }
 
 .routes-section h2 {
-  color: #ff5722; /* Vibrant color for the title */
+  color: #555555; /* Vibrant color for the title */
   margin-bottom: 10px;
   text-align: center;
 }
@@ -357,11 +361,12 @@ export default {
   max-height: 300px; /* Limit height for scrollability */
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 10px;
+  color: #555555;
 }
 
 .route-list div {
-  background-color: #3c3c3c; /* Dark card-like background */
-  color: #e0e0e0; /* Light text for contrast */
+  background-color: #fbfbfb; /* Dark card-like background */
+  color: #555555; /* Light text for contrast */
   padding: 10px;
   margin-bottom: 20px; /* Add space between routes */
   border-radius: 5px;
