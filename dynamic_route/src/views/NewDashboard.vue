@@ -38,7 +38,7 @@
         <canvas id="weekdayChart" width="400" height="250"></canvas>
       </div>
       <div class="card card-graph">
-        <h3>Weekend/Holiday Passenger Volume</h3>
+        <h3>Traffic Condition</h3>
         <canvas id="weekendChart" width="400" height="250"></canvas>
       </div>
     </div>
@@ -109,7 +109,10 @@ export default {
           { featureType: "water", elementType: "geometry", stylers: [{ color: "#e3f2fd" }] },
         ],
       });
+      this.trafficLayer = new google.maps.TrafficLayer();
+      this.trafficLayer.setMap(this.map);
     },
+    
     renderWeekdayChart() {
       const ctx = document.getElementById("weekdayChart").getContext("2d");
       new Chart(ctx, {
@@ -133,10 +136,10 @@ export default {
       new Chart(ctx, {
         type: "bar",
         data: {
-          labels: ["Saturday", "Sunday", "Holiday"],
+          labels: ["High", "Medium", "low"],
           datasets: [
             {
-              label: "Passengers",
+              label: "Traffic",
               data: [1800, 2200, 2500],
               backgroundColor: ["#ef5350", "#ffca28", "#66bb6a"],
             },

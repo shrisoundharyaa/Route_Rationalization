@@ -92,7 +92,7 @@ export default {
     
     /* padding: 24px;  */
     height: 95vh; 
-    background: #d1d1d1;
+    background: #333;
     display: flex;
     flex-direction: column;
     margin:10px 0px 0px 40px;
@@ -108,14 +108,14 @@ export default {
 .name{
   position: fixed;
  top:15px;
-  color: #080808;
+  color: #b8b8b8;
 }
 
   /* Individual bus card styling */
   .bus-card {
 
   padding: 25px; 
-  color: #565448;
+  color: #cccccc;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -179,7 +179,7 @@ export default {
   justify-content: center;
   height: 93vh; 
   width: 20vw; 
-  background-color: #d1d1d1;
+  background-color: #222;
   margin: 20px 20px 0px 25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions */

@@ -231,12 +231,12 @@ export default {
   display: flex; 
   height: 100vh; 
   width: 100vw; 
-  background-color: #e7e7e7;
+  background-color: #333;
 }
 
 .left-container {
   width: 25%; 
-  background-color: #222222; 
+  background-color: #333; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -246,7 +246,7 @@ export default {
 
 .right-container {
   width: 100%; 
-  background-color: #e7e7e7; 
+  background-color: #333; 
   display: flex;
   flex-direction: column;
   justify-content: center;
