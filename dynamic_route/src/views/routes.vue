@@ -1,11 +1,10 @@
 <template>
   <div class="ui-container">
     <!-- Sidebar -->
+    <topbar />
+    <floaingbar />
     <div class="sidebar">
-      <!-- Input Section -->
-       <div class="back-arrow" @click="$router.push('/newdashboard')">
-        <i class="fa fa-arrow-left"></i>
-      </div>
+      
       <div class="input-section">
         <div class="input-group">
           <input type="text" id="start" v-model="start" placeholder="Enter Starting Location" />
@@ -35,7 +34,13 @@
 </template>
 
 <script>
+import floaingbar from "@/components/floaingbar.vue";
+import topbar from "@/components/topbar.vue";
 export default {
+  components: {
+    topbar,
+    floaingbar,
+  },
   data() {
     return {
       start: '',
@@ -243,7 +248,7 @@ export default {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: #121212; /* Dark background for the whole container */
+  background-color: #e1e2e7; /* Dark background for the whole container */
 }
 /* .back-arrow{
   position: absolute;
@@ -251,10 +256,14 @@ export default {
 /* Sidebar Styling */
 .sidebar {
   width: 22%;
-  background-color: #1c1c1c; /* Darker sidebar background */
+  background-color: #fff; /* Darker sidebar background */
   color: #e0e0e0; /* Lighter text for contrast */
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  margin-left: 60px;
+  margin-top:80px;
+  height: 85%;
+  border-radius: 10px;
 }
 
 .input-section,
@@ -280,7 +289,7 @@ export default {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #2c2c2c; /* Darker input background */
+  background-color: #e9e9e9; /* Darker input background */
   color: #ffffff; /* White text */
 }
 
@@ -288,7 +297,7 @@ export default {
   width: 100%;
   padding: 10px;
   border: none;
-  background-color: #ff5722; /* Vibrant button color */
+  background-color: #b2b6ce; /* Vibrant button color */
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -318,10 +327,11 @@ export default {
 /* Map Styling */
 .map-container {
   flex: 1;
-  background-color: #383737; /* Match the sidebar background for cohesion */
+  background-color: #e1e2e7; /* Match the sidebar background for cohesion */
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top:70px;
 }
 
 .map-container #map {
