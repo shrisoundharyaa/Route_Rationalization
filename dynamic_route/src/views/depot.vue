@@ -162,8 +162,8 @@ export default {
   <style scoped>
 /* General Styles */
 #main {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(to bottom, #f5f7fa, #dce1e8);
+  /* font-family: 'Roboto', sans-serif; */
+  background: #e0e1e3;
   min-height: 100vh;
   min-width: 100vw;
   display: flex;

@@ -3,23 +3,26 @@
     <h1>Depot Details</h1>
     <topbar />
     <floaingbar />
-    
-    <!-- Depot Details -->
-    <div v-if="depot" class="depot-details">
-      <h2>{{ depot.name }}</h2>
-      <p><strong>Total Capacity:</strong> {{ depot.capacity }}</p>
-      <p><strong>Location:</strong> {{ depot.location }}</p>
-    </div>
-    
-    <!-- Search Bar and Add Bus Button -->
-    <div class="search-add-container">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search Buses..."
-        class="search-bar"
-      />
-      <button @click="showAddBusForm" class="add-bus-btn">Add Bus</button>
+
+    <!-- Depot and Search/Add Container Row -->
+    <div class="depot-search-container">
+      <!-- Depot Details -->
+      <div v-if="depot" class="depot-details">
+        <h2>{{ depot.name }}</h2>
+        <p><strong>Total Capacity:</strong> {{ depot.capacity }}</p>
+        <p><strong>Location:</strong> {{ depot.location }}</p>
+      </div>
+
+      <!-- Search Bar and Add Bus Button -->
+      <div class="search-add-container">
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Search Buses..."
+          class="search-bar"
+        />
+        <button @click="showAddBusForm" class="add-bus-btn">Add Bus</button>
+      </div>
     </div>
 
     <!-- Bus List Table -->
@@ -98,6 +101,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -179,11 +183,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<<style scoped>
 .main {
-  background-color: #0d1117;
-  color: #c9d1d9;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e0e1e3;
+  color: #18181b;
   padding: 20px;
   min-height: 100vh;
   display: flex;
@@ -191,47 +194,63 @@ export default {
   align-items: center;
   gap: 20px;
   min-width: 100vw;
+  margin-top: 100px;
+  margin-left: 35px;
+}
+
+/* Row layout for Depot Details and Search/Add Container */
+.depot-search-container {
+  display: flex; /* Flexbox to align children horizontally */
+  justify-content: space-between; /* Space between the two containers */
+  align-items: flex-start; /* Align items at the top */
+  gap: 20px;
+  width: 90%;
+  max-width: 1200px;
 }
 
 /* Depot Details Box */
 .depot-details {
-  background-color: #161b22;
-  color: #c9d1d9;
-  padding: 20px;
+  flex: 1; /* Take up equal space */
+  max-width: 40%; /* Adjust maximum width */
+  background-color: #ffffff;
+  color: #18181b;
+  padding: 15px;
   border-radius: 10px;
-  width: 90%;
-  max-width: 900px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
 }
 
 .depot-details h2 {
-  margin-bottom: 10px;
-  font-size: 1.8rem;
-  text-align: center;
+  font-size: 1.4rem;
+  margin: 0 0 10px 0;
 }
 
 .depot-details p {
   margin: 5px 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 /* Search bar and Add Bus button container */
 .search-add-container {
+  flex: 1; /* Take equal space */
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  width: 90%;
-  max-width: 900px;
+  gap: 10px;
 }
 
 .search-bar {
   flex: 1;
   padding: 10px 15px;
   border-radius: 6px;
-  border: none;
-  color: #c9d1d9;
-  background-color: #21262d;
+  border: 1px solid rgba(128, 128, 128, 0.233);
+  color: #18181b;
+  background-color: #fbfbfb;
   font-size: 1rem;
 }
 
@@ -240,8 +259,8 @@ export default {
 }
 
 .add-bus-btn {
-  background-color: #238636;
-  color: white;
+  background-color: #12c5d1;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -251,7 +270,7 @@ export default {
 }
 
 .add-bus-btn:hover {
-  background-color: #2ea043;
+  background-color: #353f80;
 }
 
 /* Bus List Table */
@@ -259,10 +278,10 @@ export default {
   width: 90%;
   max-width: 900px;
   margin-top: 30px;
-  background-color: #161b22;
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 table {
@@ -271,31 +290,28 @@ table {
   margin: 10px 0;
 }
 
-table th, table td {
+table th,
+table td {
   padding: 15px;
-  border: 1px solid #21262d;
   text-align: center;
   font-size: 1rem;
-  color: #c9d1d9;
 }
 
 table th {
-  background-color: #21262d;
+  background-color: #ecebf3;
   font-size: 1.1rem;
+  color: #353f80;
 }
 
-table tr:nth-child(even) {
-  background-color: #161b22;
-}
-
-table tr:hover {
-  background-color: #2d333b;
+table td {
+  background-color: #fbfbfb;
+  color: #18181b;
 }
 
 button {
-  background-color: #30363d;
-  color: #c9d1d9;
-  border: 1px solid #444c56;
+  background-color: #e5e3f3;
+  color: #18181b;
+  border: 1px solid rgba(128, 128, 128, 0.233);
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 6px;
@@ -304,7 +320,8 @@ button {
 }
 
 button:hover {
-  background-color: #3f4955;
+  background-color: #12c5d1;
+  color: #ffffff;
 }
 
 /* Overlay for Add Bus Form */
@@ -314,7 +331,7 @@ button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(13, 17, 23, 0.8);
+  background-color: rgba(255, 255, 255, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -322,13 +339,13 @@ button:hover {
 }
 
 .form-container {
-  background-color: #161b22;
-  color: #c9d1d9;
+  background-color: #ffffff;
+  color: #18181b;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .form-container h3 {
@@ -346,25 +363,26 @@ label {
   font-size: 1rem;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-  border: none;
-  color: #c9d1d9;
-  background-color: #21262d;
+  border: 1px solid rgba(128, 128, 128, 0.233);
+  color: #18181b;
+  background-color: #fbfbfb;
   font-size: 1rem;
 }
 
-input:focus, select:focus {
-  outline: none;
-  border-color: #238636;
+input:focus,
+select:focus {
+  border-color: #12c5d1;
 }
 
 button[type="submit"] {
   width: 100%;
-  background-color: #238636;
-  color: white;
+  background-color: #12c5d1;
+  color: #ffffff;
   border: none;
   padding: 10px 15px;
   border-radius: 6px;
@@ -373,18 +391,23 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background-color: #2ea043;
+  background-color: #353f80;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .search-add-container {
+  .depot-search-container {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 20px;
   }
 
-  table th, table td {
+  .depot-details {
+    max-width: 100%;
+  }
+
+  table th,
+  table td {
     padding: 10px;
     font-size: 0.9rem;
   }
