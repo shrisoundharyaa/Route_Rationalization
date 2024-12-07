@@ -1,5 +1,5 @@
 <template>
-  
+  <div class = "main-container">
   <div class="grid-container">
    
     <!-- Left Container -->
@@ -33,7 +33,7 @@
 
     <!-- Center Container (Map) -->
     <div class="center-container">
-      <div class="map-container">
+      <div class="card map-container">
         <div id="map" ref="map"></div>
       </div>
     </div>
@@ -51,12 +51,21 @@
         </div>
         <div class="stats-card">
           <h4>Top Buses</h4>
-          <p>Bus 1, Bus 3, Bus 5</p>
+          <!-- <p>Bus 1, Bus 3, Bus 5</p> -->
+          <canvas id="topBusesChart" width="250" height="150"></canvas>
           <!-- <div class="graph"></div>  -->
         </div>
+        <div class="stats-card">
+          <h4 style=" font-size: 1.3rem;">Average Delay</h4>
+
+
+       <canvas id="averageDelayChart" width="25" height="150"></canvas>
+</div>
+        
       </div>
     </div>
   </div>
+</div>
 </template>
 
 
@@ -68,8 +77,9 @@
 import busIcon from '@/assets/bus.png';
 import floaingbar from "@/components/floaingbar.vue";
 import topbar from "@/components/topbar.vue";
+import { Chart, registerables } from "chart.js";
 
-
+Chart.register(...registerables);
 export default {
   components: {  topbar,
     floaingbar, },
@@ -82,6 +92,11 @@ export default {
       routes: [],
       selectedBus: null,
       geocoder: null, 
+      buses: [
+        { delay: 10 },
+        { delay: 5 },
+        { delay: 15 },
+      ],
     };
   },
   mounted() {
@@ -90,6 +105,10 @@ export default {
       if (lastSelectedBus) {
         this.selectedBus = JSON.parse(lastSelectedBus);
       }
+   
+      this.initAverageDelayChart();
+      this.initTopBusesChart();
+    
   },
   methods: {
     async initMap() {
@@ -122,6 +141,67 @@ export default {
       this.map.addListener('zoom_changed', () => {
         const zoomLevel = this.map.getZoom();
         this.updateBusMarkerSizes(zoomLevel);
+      });
+    },
+    calculateAverageDelay() {
+    if (this.buses.length === 0) return 0;
+    const totalDelay = this.buses.reduce((sum, bus) => sum + bus.delay, 0);
+    return (totalDelay / this.buses.length).toFixed(2); // Rounded to 2 decimal places
+  },
+  initAverageDelayChart() {
+    const ctx = document.getElementById("averageDelayChart").getContext("2d");
+    new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: this.buses.map((_, index) => `Bus ${index + 1}`), // Label each bus
+        datasets: [
+          {
+            label: "Delay (mins)",
+            data: this.buses.map((bus) => bus.delay), // Pass the delay times
+            backgroundColor: ["#4caf50", "#2196f3", "#f44336", "#ff9800", "#9c27b0"], // Colors
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: "top",
+          },
+        },
+      },
+    });
+  },
+    calculateAverageDelay() {
+      if (this.buses.length === 0) return 0;
+      const totalDelay = this.buses.reduce((sum, bus) => sum + bus.delay, 0);
+      return (totalDelay / this.buses.length).toFixed(2); // Rounded to 2 decimal places
+    },
+    initTopBusesChart() {
+      const ctx = document.getElementById("topBusesChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar", // Bar chart type
+        data: {
+          labels: ["Bus 1", "Bus 3", "Bus 5"], // Example bus names
+          datasets: [
+            {
+              label: "Delay (mins)",
+              data: [10, 5, 15], // Example delay times
+              backgroundColor: ["#4caf50", "#2196f3", "#f44336"], // Colors
+              borderColor: ["#388e3c", "#1976d2", "#d32f2f"],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
       });
     },
     async loadRoutes() {
@@ -281,27 +361,40 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+.main-container {
+  /* padding: 20px; */
+  display: flex;
+  flex-direction: column;
+  /* gap: 20px; */
+  height: 110vh; /* Full viewport height */
+  /* overflow-y: auto;  */
+  width: 100vw;
+  /* overflow-x: hidden;
+  box-sizing: border-box;
+  -ms-overflow-style: none; */
+}
+
+/* ::-webkit-scrollbar {
+  display: none;
+} */
 .grid-container {
   margin-left: 50px;
-  margin-top:80px;
+  margin-top: 80px;
   display: grid;
-  grid-template-columns: 25% 50% 25%; 
-  grid-template-rows: 100vh; 
+  grid-template-columns: 25% 50% 25%;
+  grid-template-rows: 100vh;
   width: 100vw;
-  background-color: #ecedf1;
 }
 
 .left-container,
 .right-container {
-  background-color: #ffffff; /* --background-1 */
+  background-color: #e0e1e3; /* --background-1 */
   display: flex;
   justify-content: flex-start;
   flex-direction: column; /* Stack the elements vertically */
   align-items: center;
   padding: 20px;
- 
   overflow-y: auto; /* Add scrolling if content exceeds container height */
 }
 
@@ -310,7 +403,7 @@ export default {
 }
 
 .right-container {
-  padding-top: 40px;
+  padding-top: 20px;
   overflow-y: auto;
 }
 
@@ -319,7 +412,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 20px;
+  /* gap: 20px; */
   color: #18181b;
   width: 100%;
   max-width: 400px; /* Limit content width */
@@ -335,8 +428,9 @@ p {
   font-size: 1rem;
   margin: 0;
 }
+
 .detail-container {
-  background-color: #fbfbfb; /* Dark background for contrast */
+  background-color: #fff; /* Dark background for contrast */
   padding: 20px;
   border-radius: 10px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -350,7 +444,7 @@ p {
   font-size: 1.6rem;
   margin-bottom: 10px;
   text-align: center;
-  color: #353f80; 
+  color: #353f80;
 }
 
 .detail-container p {
@@ -366,11 +460,19 @@ p {
 }
 
 .center-container {
-  background-color: #ffffff;
+  background-color: #e0e1e3;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+
+.card {
+  background-color: #ffffff; /* Card background */
+  padding: 20px;
+  border-radius: 100px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; /* Shadow */
+  color: #18181b; /* Main text color */
 }
 
 .map-container {
@@ -384,20 +486,21 @@ p {
 
 #map {
   width: 100%;
-  height: 100%;
+  height: 103%;
   border-radius: 10px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 /* Stats Cards */
 .stats-card {
-  background-color: #eef0fe; 
+  background-color: #fff;
   padding: 20px;
   margin: 10px 0;
   border-radius: 10px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  width: 85%;
-  max-width: 380px;
+  width: 100%;
+  max-width: 250px;
+  /* margin-top: 2px; */
 }
 
 .stats-card h4 {
@@ -413,40 +516,16 @@ p {
   text-align: center;
 }
 
-.stats-card .graph {
-  width: 100%;
-  height: 150px; /* Placeholder height for graphs */
-  margin-top: 10px;
-  background-color: #c4c5cb; /* --card */
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Graph Styles (Optional) */
-.graph canvas {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 100%; /* Full width for smaller screens */
     grid-template-rows: auto auto; /* Stack rows */
   }
-
-  .left-container,
-  .right-container {
-    padding: 15px;
-    width: 100%;
-    overflow-y: visible; /* Disable scrollbars on smaller screens */
-  }
-
-  .content {
-    max-width: 100%; /* Allow content to take full width */
-    align-items: center;
-  }
 }
 
+.stats-card canvas {
+  margin-top: 10px;
+}
 </style>
+
