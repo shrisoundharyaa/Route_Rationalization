@@ -47,12 +47,12 @@
         <div class="stats-card">
           <h4>Total Buses Running</h4>
           <p>{{ buses.length }}</p>
-          <div class="graph"></div> <!-- Placeholder for graph -->
+          <!-- <div class="graph"></div> -->
         </div>
         <div class="stats-card">
           <h4>Top Buses</h4>
           <p>Bus 1, Bus 3, Bus 5</p>
-          <div class="graph"></div> <!-- Placeholder for graph -->
+          <!-- <div class="graph"></div>  -->
         </div>
       </div>
     </div>
@@ -64,14 +64,14 @@
 
 
 <script>
-import sidenav from '../components/sidenav.vue';
+// import sidenav from '../components/sidenav.vue';
 import busIcon from '@/assets/bus.png';
 import floaingbar from "@/components/floaingbar.vue";
 import topbar from "@/components/topbar.vue";
 
 
 export default {
-  components: { sidenav, topbar,
+  components: {  topbar,
     floaingbar, },
   data() {
     return {
@@ -284,22 +284,24 @@ export default {
 
 <style scoped>
 .grid-container {
+  margin-left: 50px;
+  margin-top:80px;
   display: grid;
-  grid-template-columns: 25% 50% 25%; /* Adjust left and right containers to each take up 25% width */
-  grid-template-rows: 100vh; /* Full height */
+  grid-template-columns: 25% 50% 25%; 
+  grid-template-rows: 100vh; 
   width: 100vw;
-  background-color: #333;
+  background-color: #ecedf1;
 }
 
 .left-container,
 .right-container {
-  background-color: #444;
+  background-color: #ffffff; /* --background-1 */
   display: flex;
-  justify-content: flex-start; /* Align items to start for better spacing */
+  justify-content: flex-start;
   flex-direction: column; /* Stack the elements vertically */
   align-items: center;
   padding: 20px;
-  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5); /* Inner shadow for depth */
+ 
   overflow-y: auto; /* Add scrolling if content exceeds container height */
 }
 
@@ -318,7 +320,7 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
-  color: white;
+  color: #18181b;
   width: 100%;
   max-width: 400px; /* Limit content width */
 }
@@ -334,13 +336,13 @@ p {
   margin: 0;
 }
 .detail-container {
-  background-color: #555; /* Dark background for contrast */
+  background-color: #fbfbfb; /* Dark background for contrast */
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   width: 100%;
   max-width: 380px; /* Limit width */
-  color: white; /* Text color */
+  color: #353f80; /* Text color */
   margin-top: 20px;
 }
 
@@ -348,13 +350,13 @@ p {
   font-size: 1.6rem;
   margin-bottom: 10px;
   text-align: center;
-  color: #fff;
+  color: #353f80; 
 }
 
 .detail-container p {
   font-size: 1rem;
   margin: 10px 0;
-  color: #bbb; /* Light text color */
+  color: #18181b; /* Light text color */
 }
 
 /* Optional: Style for the "No bus selected" message */
@@ -364,7 +366,7 @@ p {
 }
 
 .center-container {
-  background-color: #333;
+  background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -384,30 +386,30 @@ p {
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 /* Stats Cards */
 .stats-card {
-  background-color: #555;
+  background-color: #eef0fe; 
   padding: 20px;
   margin: 10px 0;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-  width: 100%;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  width: 85%;
   max-width: 380px;
 }
 
 .stats-card h4 {
   margin: 0;
   font-size: 1.3rem;
-  color: white;
+  color: #353f80;
   text-align: center;
 }
 
 .stats-card p {
   font-size: 1rem;
-  color: #bbb;
+  color: #18181b;
   text-align: center;
 }
 
@@ -415,7 +417,7 @@ p {
   width: 100%;
   height: 150px; /* Placeholder height for graphs */
   margin-top: 10px;
-  background-color: #222;
+  background-color: #c4c5cb; /* --card */
   border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
