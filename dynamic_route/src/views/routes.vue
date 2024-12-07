@@ -4,12 +4,23 @@
     <topbar />
     <floaingbar />
     <div class="sidebar">
+      <!-- Route ID Search Section -->
+      <div class="input-section">
+        <div class="input-group">
+          <input
+            type="text"
+            v-model="routeId"
+            placeholder="Enter Route ID"
+          />
+          <button class="primary-btn" @click="fetchRouteStops">Search Route</button>
+        </div>
+      </div>
       
+      <!-- Input Section for Start and End -->
       <div class="input-section">
         <div class="input-group">
           <input type="text" id="start" v-model="start" placeholder="Enter Starting Location" />
           <input type="text" id="end" v-model="end" placeholder="Enter Destination" />
-          
         </div>
       </div>
 
@@ -17,7 +28,6 @@
       <div class="controls-section">
         <button class="primary-btn" @click="calculateRoutes">Calculate Routes</button>
         <button class="control-btn" @click="resetMap">Reset Map</button>
-        
       </div>
 
       <!-- Route List Section -->
@@ -34,9 +44,12 @@
   </div>
 </template>
 
+
 <script>
 import floaingbar from "@/components/floaingbar.vue";
 import topbar from "@/components/topbar.vue";
+import busStop from "@/assets/bus-station.png"
+
 export default {
   components: {
     topbar,
@@ -44,6 +57,7 @@ export default {
   },
   data() {
     return {
+      routeId: "", // Holds the input route_id
       start: '',
       end: '',
       map: null,
@@ -57,25 +71,17 @@ export default {
       busMarkers: [],
       geocoder: null,
       mapType: 'roadmap',
+      stops: [], // Holds fetched stops data
     };
   },
   mounted() {
-    // Initialize Google Maps
     this.initMap();
   },
   methods: {
     initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
-        center: { lat: 28.6139, lng: 77.209 },
+        center: { lat: 28.6139, lng: 77.209 }, // Default to Delhi
         zoom: 12,
-        styles: [
-          { elementType: 'geometry', stylers: [{ color: '#f5f5f5' }] },
-          { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-          { elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
-          { elementType: 'labels.text.stroke', stylers: [{ color: '#f5f5f5' }] },
-          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ffffff' }] },
-          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#e3f2fd' }] },
-        ]
       });
 
       this.directionsService = new google.maps.DirectionsService();
@@ -83,25 +89,79 @@ export default {
       this.directionsRenderer.setMap(this.map);
 
       this.trafficLayer = new google.maps.TrafficLayer();
-
-      // this.autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('start'));
-      // this.autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('end'));
-
       this.geocoder = new google.maps.Geocoder();
+    },
 
-      this.addBusMarkers(this.busMarkers);
+    async fetchRouteStops() {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/api/stops?route_id=${this.routeId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch stops');
+        }
+        const data = await response.json();
+        this.stops = data;
+        
+        // Display the stops on the map
+        this.displayStopsOnMap(this.stops);
+      } catch (error) {
+        console.error('Error fetching route stops:', error);
+      }
     },
-    addBusMarkers(locations) {
-      locations.forEach(location => {
-        const marker = new google.maps.Marker({
-          position: location,
-          map: this.map,
-          title: 'Bus Stop',
-          icon: 'http://maps.google.com/mapfiles/ms/icons/bus.png',
-        });
-        this.busMarkers.push(marker);
-      });
+
+    displayStopsOnMap(stops) {
+  // Clear existing markers and polylines
+  this.clearMap();
+
+  const routePath = [];
+
+  // Add markers for each stop and prepare polyline path
+  stops.forEach((stop) => {
+    const position = {
+      lat: parseFloat(stop.stop_lat),
+      lng: parseFloat(stop.stop_lon),
+    };
+    routePath.push(position);
+
+    // Add a marker for each stop with reduced size
+    const marker = new google.maps.Marker({
+      position,
+      map: this.map,
+      title: stop.stop_name,
+      icon: {
+        url: busStop,
+        scaledSize: new google.maps.Size(30, 30), // Adjust size as needed
+      },
+    });
+    this.busMarkers.push(marker);
+  });
+
+  // Draw polyline to connect stops
+  const polyline = new google.maps.Polyline({
+    path: routePath,
+    strokeColor: "#007bff",
+    strokeOpacity: 0.8,
+    strokeWeight: 4,
+  });
+  polyline.setMap(this.map);
+  this.polylines.push(polyline);
+
+  // Adjust map bounds
+  const bounds = new google.maps.LatLngBounds();
+  routePath.forEach((point) => bounds.extend(point));
+  this.map.fitBounds(bounds);
+},
+
+
+    clearMap() {
+      // Clear markers
+      this.busMarkers.forEach((marker) => marker.setMap(null));
+      this.busMarkers = [];
+
+      // Clear polylines
+      this.polylines.forEach((polyline) => polyline.setMap(null));
+      this.polylines = [];
     },
+
     calculateRoutes() {
       this.clearRouteData();
       if (!this.start || !this.end) {
@@ -128,6 +188,7 @@ export default {
         }
       });
     },
+
     displayRoutes(result) {
       const routes = result.routes;
       const routeList = document.getElementById('routeList');
@@ -166,7 +227,6 @@ export default {
           <h3>Route ${index + 1}</h3>
           <p>Distance: ${routeDistance}</p>
           <p>Duration: ${routeDuration}</p>
-          <P></p>
         `;
 
         routeInfo.addEventListener('click', () => {
@@ -193,44 +253,32 @@ export default {
       });
       this.map.fitBounds(bounds);
     },
+
     showRoute(routeIndex) {
       this.polylines.forEach(polyline => polyline.setMap(null));
       this.polylines[routeIndex].setMap(this.map);
     },
+
     resetMap() {
-      // this.start = '';
-      // this.end = '';
-      
-      // document.getElementById('routeList').innerHTML = '';
-      // this.markers.forEach(marker => marker.setMap(null));
-      // this.markers = [];
-      // this.polylines.forEach(polyline => polyline.setMap(null));
-      // this.polylines = [];
-      // this.busMarkers.forEach(marker => marker.setMap(null));
-      // this.busMarkers = [];
-       window.location.reload();
-      this.map.setCenter({lat: 28.6139, lng: 77.209 });
+      window.location.reload();
+      this.map.setCenter({ lat: 28.6139, lng: 77.209 });
       this.map.setZoom(12);
-      // this.start = null;
-      // this.end = null;
-      // this.clearRouteData();
     },
-   
 
     clearRouteData() {
-  // Clear existing markers
-  this.markers.forEach(marker => marker.setMap(null));
-  this.markers = [];
+      // Clear existing markers
+      this.markers.forEach(marker => marker.setMap(null));
+      this.markers = [];
 
-  // Clear existing polylines
-  this.polylines.forEach(polyline => polyline.setMap(null));
-  this.polylines = [];
+      // Clear existing polylines
+      this.polylines.forEach(polyline => polyline.setMap(null));
+      this.polylines = [];
 
-  // Clear directions from DirectionsRenderer
-  if (this.directionsRenderer) {
-    this.directionsRenderer.setDirections({ routes: [] });
-  }
-},
+      // Clear directions from DirectionsRenderer
+      if (this.directionsRenderer) {
+        this.directionsRenderer.setDirections({ routes: [] });
+      }
+    },
 
     getRouteColor(index) {
       switch (index) {
@@ -243,6 +291,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .ui-container {
@@ -291,7 +340,7 @@ export default {
   border: none;
   border-radius: 9px;
   background-color: #e9e9e9; /* Darker input background */
-  color: #ffffff; /* White text */
+  color: #575757; /* White text */
 }
 .controls-section{
   display: flex;
