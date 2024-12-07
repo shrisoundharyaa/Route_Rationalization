@@ -24,12 +24,22 @@
 
       <!-- Right Traffic Incidents Section -->
       <div class="card card-incidents">
-        <h3>Traffic Incidents</h3>
+        <!-- <h3>Traffic Incidents</h3>
         <ul>
           <li><strong>Accident:</strong> 29/12/2021, 17:03 at Upper Serangoon Rd</li>
           <li><strong>Heavy Traffic:</strong> CTE (towards SLE)</li>
           <li><strong>Roadwork:</strong> Marine Parade Rd</li>
-        </ul>
+        </ul> -->
+        <h1>Traffic Incident</h1>
+          <div v-if="currentIncident">
+            <h2>{{ currentIncident.type }}</h2>
+            <p>{{ currentIncident.description }}</p>
+            <p><strong>Location:</strong> {{ currentIncident.location }}</p>
+            <p><strong>Time:</strong> {{ new Date(currentIncident.timestamp).toLocaleString() }}</p>
+          </div>
+          <div v-else>
+            <p>Loading incidents...</p>
+          </div>
       </div>
 
       <!-- Bottom Graphs -->
@@ -75,6 +85,7 @@ import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 import floaingbar from "@/components/floaingbar.vue";
 import topbar from "@/components/topbar.vue";
+import axios from "axios";
 
 export default {
   name: "TrafficDashboard",
@@ -85,6 +96,9 @@ export default {
   data() {
     return {
       map: null,
+      incidents: [],
+      currentIncidentIndex: 0,
+      currentIncident: null,
     };
   },
   mounted() {
@@ -94,6 +108,7 @@ export default {
       this.renderWeekendChart();
       this.renderMonthlyTrafficChart(); // Add the monthly traffic chart
     });
+    this.fetchIncidents();
   },
   methods: {
     initMap() {
@@ -164,6 +179,26 @@ export default {
           ],
         },
       });
+    },
+    fetchIncidents() {
+      axios.get("http://localhost:3000/api/incidents")
+            .then((response) => {
+          this.incidents = response.data;
+          if (this.incidents.length > 0) {
+            this.currentIncident = this.incidents[this.currentIncidentIndex];
+            this.startIncidentRotation();
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching incidents:", error);
+        });
+    },
+    startIncidentRotation() {
+      setInterval(() => {
+        this.currentIncidentIndex =
+          (this.currentIncidentIndex + 1) % this.incidents.length;
+        this.currentIncident = this.incidents[this.currentIncidentIndex];
+      }, 5000); // Rotate every 10 seconds
     },
   },
 };
