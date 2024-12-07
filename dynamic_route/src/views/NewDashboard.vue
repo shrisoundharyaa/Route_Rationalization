@@ -171,7 +171,7 @@ export default {
   
   <style scoped>
  body {
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
   color: #18181b; /* Main text color */
   background-color: #ecedf1; /* Light theme background color */
 }
