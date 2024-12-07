@@ -1,6 +1,8 @@
 <template>
   <div class="main">
     <h1>Depot Details</h1>
+    <topbar />
+    <floaingbar />
     
     <!-- Depot Details -->
     <div v-if="depot" class="depot-details">
@@ -99,9 +101,14 @@
 
 <script>
 import axios from 'axios';
-
+import floaingbar from "@/components/floaingbar.vue";
+import topbar from "@/components/topbar.vue";
 export default {
   name: 'DepotDetails',
+  components: {
+    topbar,
+    floaingbar,
+  },
   data() {
     return {
       depot: null,

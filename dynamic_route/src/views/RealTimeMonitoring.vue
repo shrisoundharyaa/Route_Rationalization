@@ -1,8 +1,12 @@
 <template>
+  
   <div class="grid-container">
+   
     <!-- Left Container -->
-    <div class="left-container">
+     <div class="left-container">
       <div class="content">
+        <topbar />
+        <floaingbar />
         <div v-if="selectedBus" class="detail-container">
           <h3>Bus Details</h3>
           <p><strong>Driver:</strong> {{ selectedBus.details.driverName }}</p>
@@ -62,10 +66,13 @@
 <script>
 import sidenav from '../components/sidenav.vue';
 import busIcon from '@/assets/bus.png';
+import floaingbar from "@/components/floaingbar.vue";
+import topbar from "@/components/topbar.vue";
 
 
 export default {
-  components: { sidenav },
+  components: { sidenav, topbar,
+    floaingbar, },
   data() {
     return {
       map: null,
