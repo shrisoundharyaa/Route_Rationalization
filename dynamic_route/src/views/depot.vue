@@ -4,7 +4,7 @@
       <floaingbar />
     <div class="top-sec">
      
-      <h1>Depot Management</h1>
+      <h1 style="font-size: 22px;">Depot Management</h1>
       <div class="stats-container">
       
         <p>Total Depots: <strong>{{ totalDepots }}</strong></p>
@@ -176,7 +176,7 @@ export default {
 
 /* Title */
 h1 {
-  font-size: 2.8rem;
+
   margin-bottom: 20px;
   color: #34495e;
   text-transform: uppercase;
