@@ -70,11 +70,20 @@
 
       <!-- Additional Notification Section -->
       <div class="card card-extra-notifications">
-        <h3>Notifications</h3>
-        <ul>
-          <li><strong>Scheduled Maintenance:</strong> 30/12/2021, 10:00</li>
-          <li><strong>Weather Alert:</strong> Heavy rain expected tomorrow.</li>
-        </ul>
+        <div class="card">
+      
+  
+      <div v-if="weatherData" class="weather" :class="{ loading: loading }">
+        <h2 class="city">Weather in {{ weatherData.name }}</h2>
+        <h1 class="temp">{{ weatherData.main.temp }}°C</h1>
+        <div class="flex">
+          <img :src="weatherData.weather[0].iconUrl" alt="" class="icon" />
+          <div class="description">{{ weatherData.weather[0].description }}</div>
+        </div>
+        <div class="humidity">Humidity: {{ weatherData.main.humidity }}%</div>
+        <div class="wind">Wind speed: {{ weatherData.wind.speed }} km/h</div>
+      </div>
+    </div>
       </div>
     </div>
   </div>
@@ -99,6 +108,12 @@ export default {
       incidents: [],
       currentIncidentIndex: 0,
       currentIncident: null,
+      districts: [
+        "naraina","janakpuri","Rohini","shahdara","anand vihar"], // List of districts in Delhi
+      currentDistrictIndex: 0, // Start from the first district
+      weatherData: null,
+      loading: true,
+      apiKey: "529d1fb5dd7c8b39f349efea6195bf0c",
     };
   },
   mounted() {
@@ -106,9 +121,10 @@ export default {
       this.initMap();
       this.renderWeekdayChart();
       this.renderWeekendChart();
-      this.renderMonthlyTrafficChart(); // Add the monthly traffic chart
+      this.renderMonthlyTrafficChart();
     });
     this.fetchIncidents();
+    this.startWeatherRotation();
   },
   methods: {
     initMap() {
@@ -182,7 +198,7 @@ export default {
     },
     fetchIncidents() {
       axios.get("http://localhost:3000/api/incidents")
-            .then((response) => {
+        .then((response) => {
           this.incidents = response.data;
           if (this.incidents.length > 0) {
             this.currentIncident = this.incidents[this.currentIncidentIndex];
@@ -195,14 +211,59 @@ export default {
     },
     startIncidentRotation() {
       setInterval(() => {
-        this.currentIncidentIndex =
-          (this.currentIncidentIndex + 1) % this.incidents.length;
+        this.currentIncidentIndex = (this.currentIncidentIndex + 1) % this.incidents.length;
         this.currentIncident = this.incidents[this.currentIncidentIndex];
-      }, 5000); // Rotate every 10 seconds
+      }, 5000); // Rotate every 5 seconds
+    },
+    startWeatherRotation() {
+      setInterval(() => {
+        const district = this.districts[this.currentDistrictIndex];
+        this.fetchWeather(district);
+        this.currentDistrictIndex = (this.currentDistrictIndex + 1) % this.districts.length;
+      }, 3000); // Rotate every 3 seconds
+    },
+    fetchWeather(district) {
+      this.loading = true;
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${district},IN&units=metric&appid=${this.apiKey}`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            alert("No weather found.");
+            throw new Error("No weather found.");
+          }
+          return response.json();
+        })
+        .then((data) => this.displayWeather(data));
+    },
+    displayWeather(data) {
+      const { name } = data;
+      const { icon, description } = data.weather[0];
+      const { temp, humidity } = data.main;
+      const { speed } = data.wind;
+      this.weatherData = {
+        name,
+        main: {
+          temp,
+          humidity,
+        },
+        weather: [
+          {
+            description,
+            iconUrl: `https://openweathermap.org/img/wn/${icon}.png`,
+          },
+        ],
+        wind: {
+          speed,
+        },
+      };
+      this.loading = false;
+      document.body.style.backgroundImage = `url('https://source.unsplash.com/1600x900/?${name}')`;
     },
   },
 };
 </script>
+
   
   <style scoped>
  body {
