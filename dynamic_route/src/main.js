@@ -13,3 +13,6 @@ const app = createApp(App);
 app.use(router);
 
 app.mount('#app');
+
+// Access the API key from the .env file
+console.log("API Key from .env:", import.meta.env.VITE_API_KEY);

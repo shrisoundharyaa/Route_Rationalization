@@ -8,8 +8,8 @@
       <div class="stats-container">
       
         <p>Total Depots: <strong>{{ totalDepots }}</strong></p>
-        <p>Total Capacity: <strong>{{ totalCapacity }}</strong></p>
-      </div>
+        <p>Total Capacity: <strong>{{ totalCapacity }}</strong></p></div>
+
       <div class="filter-container">
         <input 
           type="text" 
@@ -89,6 +89,7 @@ export default {
         name: '',
         capacity: '',
       }, // Data for new depot
+      totalDepots: "<5",
     };
   },
   computed: {
@@ -162,51 +163,59 @@ export default {
   <style scoped>
 /* General Styles */
 #main {
-  /* font-family: 'Roboto', sans-serif; */
-  background: #e0e1e3;
+ 
   min-height: 100vh;
-  min-width: 100vw;
+  padding: 20px;
+  color: #2c3e50;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  color: #2c3e50;
-  margin-top: 80px;
+  box-sizing: border-box;
+  margin: auto;
+  width:100vw;
+  height:100vh;
+  margin-top:100px;
+  background-color: #e0e1e3;
 }
 
-/* Title */
-h1 {
-
+/* Top Section */
+.top-sec {
+  width: 100%;
+  max-width: 1200px;
   margin-bottom: 20px;
+  text-align: left;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
   color: #34495e;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 700;
-  text-align: center;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Stats Section */
 .stats-container {
   display: flex;
-  justify-content: space-around;
-  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
   background: #ffffff;
   padding: 20px;
   border-radius: 15px;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
   width: 100%;
 }
 
 .stats-container p {
+  font-size: 1.2rem;
   margin: 0;
-  font-size: 1.1rem;
+  color: #7f8c8d;
 }
 
 .stats-container strong {
-  color: #2980b9;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  color: #3498db;
 }
 
 /* Filter Section */
@@ -214,83 +223,77 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin: 20px 0;
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
+  margin-bottom: 20px;
+  gap:10px;
 }
 
 .search-input {
-  padding: 12px;
-  font-size: 1.1rem;
-  width: 100%;
-  max-width: 500px;
-  border-radius: 25px;
-  border: 1px solid #bdc3c7;
+  padding: 12px 20px;
+  font-size: 1rem;
+  width: calc(100% - 70px);
+  border-radius: 30px;
+  border: 1px solid #dfe6e9;
   background: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  outline: none;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .search-input:focus {
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
   border-color: #3498db;
-  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
 }
 
 .add-depot-button {
-  background: linear-gradient(to right, #3498db, #2980b9);
-  color: white;
-  font-size: 1.8rem;
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  background: linear-gradient(to right, #74b9ff, #0984e3);
   border-radius: 50%;
   border: none;
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  margin-top: 10px; 
 }
 
 .add-depot-button:hover {
-  transform: scale(1.2);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Depot Container */
 .depot-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 /* Depot Card */
 .depot-card {
-  background: linear-gradient(to top right, #ffffff, #f8f9fa);
-  color: #34495e;
-  border: none;
+  background: linear-gradient(to bottom, #ffffff, #ecf0f1);
   padding: 20px;
-  width: 300px;
-  cursor: pointer;
-  text-align: center;
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .depot-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .depot-card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 1.4rem;
   color: #2980b9;
+  margin-bottom: 10px;
 }
 
 .depot-card p {
@@ -303,9 +306,9 @@ h1 {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -314,75 +317,77 @@ h1 {
 
 .overlay-content {
   background: #ffffff;
-  color: #2c3e50;
   padding: 30px;
   border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 400px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+ 
 }
 
 .overlay-content h2 {
+  font-size: 1.5rem;
+  color: #3498db;
   margin-bottom: 20px;
-  color: #2980b9;
 }
 
-.overlay-content input,
-.overlay-content button {
-  margin-bottom: 10px;
+.overlay-content input {
+  margin-bottom: 15px;
   padding: 12px;
-  font-size: 1.1rem;
   width: 100%;
+  border: 1px solid #dfe6e9;
   border-radius: 8px;
-  border: 1px solid #bdc3c7;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+}
+
+.overlay-content input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
 }
 
 .overlay-content button {
-  background: linear-gradient(to right, #3498db, #2980b9);
-  color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #74b9ff, #3498db);
+  color: #ffffff;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .overlay-content button:hover {
-  background: #21618c;
+  background: linear-gradient(to right, #0984e3, #3498db);
+  transform: scale(1.05);
 }
 
-/* Close Button */
-.close-button {
-  background: #e74c3c;
-  color: white;
-  font-size: 1rem;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-
-.close-button:hover {
-  background: #c0392b;
-}
-
-/* Mobile Responsiveness */
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  .stats-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
+  .stats-container,
   .filter-container {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+  }
+
+  .add-depot-button {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    font-size: 1rem;
   }
 
   .depot-card {
-    width: 100%;
+    padding: 15px;
   }
 }
-
-
+  
 
 </style>
+
   

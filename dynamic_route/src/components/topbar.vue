@@ -1,8 +1,8 @@
 <template>
   <div class="topbar">
     <div class="logo-container">
-      <img src="../assets/red-fort.png" alt="Delhi Logo" class="topbar-logo" />
-      <h1 class="topbar-title">DELHI GOVERNMENT</h1>
+      <img src="../assets/dlc.logo.png" alt="Delhi Logo" class="topbar-logo" />
+      <h1 class="topbar-title">Delhi Transport Corporation </h1>
     </div>
     <div class="logout-container">
       <i
