@@ -30,7 +30,10 @@
           <li><strong>Heavy Traffic:</strong> CTE (towards SLE)</li>
           <li><strong>Roadwork:</strong> Marine Parade Rd</li>
         </ul> -->
-        <h1>Traffic Incident</h1>
+        <div class="noti">
+          <h1>Notification</h1>
+          <i class="fas fa-bell"></i>
+        </div>
           <div v-if="currentIncident">
             <h2>{{ currentIncident.type }}</h2>
             <p>{{ currentIncident.description }}</p>
@@ -347,6 +350,11 @@ export default {
   text-align: center;
   margin-bottom: 20px;
   color: #353f80; /* Secondary text color */
+}
+.noti{
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
 }
 
 /* Grid Layout */
