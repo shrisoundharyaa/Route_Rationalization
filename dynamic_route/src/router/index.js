@@ -7,6 +7,7 @@ import Businfo from "../views/businfo.vue"
 import Depot from "../views/depot.vue"
 import DepotDetail from "../views/depotDetail.vue"
 import NewDashboard from "../views/NewDashboard.vue"
+import Sch from "../views/schedule.vue"
 
 
 
@@ -18,6 +19,11 @@ const router = createRouter({
       path:'/businfo',
       name:'Businfo',
       component:Businfo
+    },
+    {
+      path:'/sch',
+      name:'Sch',
+      component:Sch
     },
  
     {

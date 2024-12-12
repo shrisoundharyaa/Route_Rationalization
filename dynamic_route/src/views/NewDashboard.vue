@@ -57,10 +57,14 @@
     <div class="grid-container extra-grid-container">
       <!-- Additional Information Card -->
       <div class="card card-extra-info">
-        <h3>Average Speed</h3>
-        <p><strong>City:</strong> 45 km/h</p>
-        <p><strong>Highway:</strong> 80 km/h</p>
-      </div>
+  <h3>Passenger Detection</h3>
+  <p><strong>Passenger Count:</strong> {{ peopleCount }}</p>
+  <img
+    :src="detectedImage"
+    alt="Detected Passengers"
+    style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px"
+  />
+</div>
 
       <!-- Additional Graph -->
       <div class="card card-extra-graph">
@@ -108,12 +112,14 @@ export default {
       incidents: [],
       currentIncidentIndex: 0,
       currentIncident: null,
-      districts: [
-        "naraina","janakpuri","Rohini","shahdara","anand vihar"], // List of districts in Delhi
+      districts: ["naraina", "janakpuri", "Rohini", "shahdara", "anand vihar"], // List of districts in Delhi
       currentDistrictIndex: 0, // Start from the first district
       weatherData: null,
       loading: true,
       apiKey: "529d1fb5dd7c8b39f349efea6195bf0c",
+      peopleCount: null,
+      detectedImage: null,
+      detectedImageTimestamp: 0,
     };
   },
   mounted() {
@@ -122,9 +128,12 @@ export default {
       this.renderWeekdayChart();
       this.renderWeekendChart();
       this.renderMonthlyTrafficChart();
+      this.fetchPeopleCountAndImage();
+      this.updatePeopleAndImage();
     });
     this.fetchIncidents();
     this.startWeatherRotation();
+    setInterval(this.updatePeopleAndImage, 5000);
   },
   methods: {
     initMap() {
@@ -143,7 +152,6 @@ export default {
       this.trafficLayer = new google.maps.TrafficLayer();
       this.trafficLayer.setMap(this.map);
     },
-    
     renderWeekdayChart() {
       const ctx = document.getElementById("weekdayChart").getContext("2d");
       new Chart(ctx, {
@@ -167,7 +175,7 @@ export default {
       new Chart(ctx, {
         type: "bar",
         data: {
-          labels: ["High", "Medium", "low"],
+          labels: ["High", "Medium", "Low"],
           datasets: [
             {
               label: "Traffic",
@@ -183,7 +191,20 @@ export default {
       new Chart(ctx, {
         type: "line",
         data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
           datasets: [
             {
               label: "Monthly Passengers",
@@ -197,7 +218,8 @@ export default {
       });
     },
     fetchIncidents() {
-      axios.get("http://localhost:3000/api/incidents")
+      axios
+        .get("http://localhost:3000/api/incidents")
         .then((response) => {
           this.incidents = response.data;
           if (this.incidents.length > 0) {
@@ -234,8 +256,38 @@ export default {
           }
           return response.json();
         })
-        .then((data) => this.displayWeather(data));
+        .then((data) => this.displayWeather(data))
+        .catch((error) => console.error("Error fetching weather data:", error));
     },
+    fetchPeopleCountAndImage() {
+      // Fetch the passenger count
+      axios
+        .get("http://127.0.0.1:5002/count")
+        .then((response) => {
+          this.peopleCount = response.data.people_count;
+        })
+        .catch((error) => console.error("Error fetching people count:", error));
+
+      // Fetch the detected image
+      this.detectedImage = "http://127.0.0.1:5002/image";
+    },
+
+    updatePeopleAndImage() {
+  // Fetch the passenger count
+  axios
+    .get("http://127.0.0.1:5002/count")
+    .then((response) => {
+      this.peopleCount = response.data.people_count;
+    })
+    .catch((error) => console.error("Error fetching people count:", error));
+    axios
+    .get("http://127.0.0.1:5002/image", { responseType: 'blob' }) // Ensure the response is treated as a blob
+    .then((response) => {
+      const url = URL.createObjectURL(response.data); // Create a URL for the image blob
+      this.detectedImage = url; // Set the detected image URL
+    })
+    .catch((error) => console.error("Error fetching detected image:", error));
+},
     displayWeather(data) {
       const { name } = data;
       const { icon, description } = data.weather[0];
@@ -263,6 +315,7 @@ export default {
   },
 };
 </script>
+
 
   
   <style scoped>
